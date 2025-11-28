@@ -1,0 +1,134 @@
+[
+  {
+    "id": "1",
+    "name": "Alice Johnson",
+    "email": "alice.johnson@email.com",
+    "phone": "+1-555-0101",
+    "membershipId": "MEM-2023-001",
+    "joinDate": "2023-01-15",
+    "status": "active",
+    "borrowedBooks": 2,
+    "address": "123 Main St, City, State 12345"
+  },
+  {
+    "id": "2",
+    "name": "Bob Smith",
+    "email": "bob.smith@email.com",
+    "phone": "+1-555-0102",
+    "membershipId": "MEM-2023-002",
+    "joinDate": "2023-02-20",
+    "status": "active",
+    "borrowedBooks": 1,
+    "address": "456 Oak Ave, City, State 12345"
+  },
+  {
+    "id": "3",
+    "name": "Carol Williams",
+    "email": "carol.williams@email.com",
+    "phone": "+1-555-0103",
+    "membershipId": "MEM-2023-003",
+    "joinDate": "2023-03-10",
+    "status": "active",
+    "borrowedBooks": 0,
+    "address": "789 Pine Rd, City, State 12345"
+  },
+  {
+    "id": "4",
+    "name": "David Brown",
+    "email": "david.brown@email.com",
+    "phone": "+1-555-0104",
+    "membershipId": "MEM-2023-004",
+    "joinDate": "2023-04-05",
+    "status": "suspended",
+    "borrowedBooks": 0,
+    "address": "321 Elm St, City, State 12345"
+  },
+  {
+    "id": "5",
+    "name": "Emma Davis",
+    "email": "emma.davis@email.com",
+    "phone": "+1-555-0105",
+    "membershipId": "MEM-2023-005",
+    "joinDate": "2023-05-12",
+    "status": "active",
+    "borrowedBooks": 3,
+    "address": "654 Maple Dr, City, State 12345"
+  },
+  {
+    "id": "6",
+    "name": "Frank Martinez",
+    "email": "frank.martinez@email.com",
+    "phone": "+1-555-0106",
+    "membershipId": "MEM-2023-006",
+    "joinDate": "2023-06-18",
+    "status": "active",
+    "borrowedBooks": 1,
+    "address": "987 Cedar Ln, City, State 12345"
+  },
+  {
+    "id": "7",
+    "name": "Grace Taylor",
+    "email": "grace.taylor@email.com",
+    "phone": "+1-555-0107",
+    "membershipId": "MEM-2023-007",
+    "joinDate": "2023-07-22",
+    "status": "active",
+    "borrowedBooks": 2,
+    "address": "147 Birch St, City, State 12345"
+  },
+  {
+    "id": "8",
+    "name": "Henry Anderson",
+    "email": "henry.anderson@email.com",
+    "phone": "+1-555-0108",
+    "membershipId": "MEM-2023-008",
+    "joinDate": "2023-08-30",
+    "status": "inactive",
+    "borrowedBooks": 0,
+    "address": "258 Willow Ave, City, State 12345"
+  },
+  {
+    "id": "9",
+    "name": "Isabel Garcia",
+    "email": "isabel.garcia@email.com",
+    "phone": "+1-555-0109",
+    "membershipId": "MEM-2023-009",
+    "joinDate": "2023-09-14",
+    "status": "active",
+    "borrowedBooks": 1,
+    "address": "369 Spruce Dr, City, State 12345"
+  },
+  {
+    "id": "10",
+    "name": "Jack Wilson",
+    "email": "jack.wilson@email.com",
+    "phone": "+1-555-0110",
+    "membershipId": "MEM-2023-010",
+    "joinDate": "2023-10-08",
+    "status": "active",
+    "borrowedBooks": 0,
+    "address": "741 Ash Rd, City, State 12345"
+  },
+  {
+    "id": "11",
+    "name": "Karen Lee",
+    "email": "karen.lee@email.com",
+    "phone": "+1-555-0111",
+    "membershipId": "MEM-2024-011",
+    "joinDate": "2024-01-12",
+    "status": "active",
+    "borrowedBooks": 2,
+    "address": "852 Poplar St, City, State 12345"
+  },
+  {
+    "id": "12",
+    "name": "Leo Thompson",
+    "email": "leo.thompson@email.com",
+    "phone": "+1-555-0112",
+    "membershipId": "MEM-2024-012",
+    "joinDate": "2024-02-25",
+    "status": "active",
+    "borrowedBooks": 1,
+    "address": "963 Hickory Ln, City, State 12345"
+  }
+]
