@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "./Sidebar";
+import  AdminSidebar  from "./AdminSidebar";
 import { Navbar } from "./Navbar";
 
 interface DashboardLayoutProps {
@@ -11,7 +11,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <AppSidebar />
+        <AdminSidebar />
         <div className="flex-1 flex flex-col">
           <Navbar />
           <main className="flex-1 p-6 bg-background">
@@ -22,3 +22,4 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     </SidebarProvider>
   );
 }
+export default DashboardLayout;

@@ -1,43 +1,86 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Provider } from "react-redux";
-import { store } from "./store";
-import { DashboardLayout } from "./components/layout/DashboardLayout";
-import Dashboard from "./pages/Dashboard";
-import Books from "./pages/Books";
-import Members from "./pages/Members";
-import Borrowing from "./pages/Borrowing";
-import Reservations from "./pages/Reservations";
-import Reports from "./pages/Reports";
-import NotFound from "./pages/NotFound";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useRole } from './store/RoleContext';
+import { Outlet } from "react-router-dom";
 
-const queryClient = new QueryClient();
+// Layouts
+import { AdminLayout } from './components/layout/AdminLayout';
 
-const App = () => (
-  <Provider store={store}>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <DashboardLayout>
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/books" element={<Books />} />
-              <Route path="/members" element={<Members />} />
-              <Route path="/borrowing" element={<Borrowing />} />
-              <Route path="/reservations" element={<Reservations />} />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </DashboardLayout>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </Provider>
-);
+import  UserLayout from './components/layout/UserLayout';
+
+
+// Auth
+import Login from './pages/Login';
+
+// Admin Pages (your existing pages)
+import Dashboard from './pages/Dashboard';
+import Books from './pages/Books';
+import Members from './pages/Members';
+import Borrowing from './pages/Borrowing';
+import Reservations from './pages/Reservations';
+import NotFound from './pages/NotFound';
+import Fines from './pages/Fines';
+
+// User Pages
+import UserCatalog from './pages/UserCatalog';
+import UserBorrowed from './pages/UserBorrowed';
+import UserReservation from './pages/UserReservation';
+import UserFines from './pages/UserFines';
+import UserProfile from './pages/UserProfile';
+
+// Protected Route Wrapper
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useRole();
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
+}
+
+function App() {
+  return (
+
+      <Routes>
+        {/* Public Route */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Admin Routes - Keep your exact URLs */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="books" element={<Books />} />
+          <Route path="members" element={<Members />} />
+          <Route path="borrowing" element={<Borrowing />} />
+          <Route path="reservations" element={<Reservations />} />
+          <Route path="fines" element={<Fines />} />
+        </Route>
+
+        {/* User Routes */}
+                    <Route
+              path="/user"
+              element={
+                <ProtectedRoute>
+                  <UserLayout>
+                    <Outlet />
+                  </UserLayout>
+                </ProtectedRoute>
+              }
+            >
+          <Route path="catalog" element={<UserCatalog />} />
+          <Route path="borrowed" element={<UserBorrowed />} />
+          <Route path="reservations" element={<UserReservation />} />
+          <Route path="fines" element={<UserFines />} />
+          <Route path="profile" element={<UserProfile />} />
+        </Route>
+
+
+        {/* 404 */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+  
+  );
+}
 
 export default App;
