@@ -260,6 +260,7 @@ export default function UserCatalog() {
 
             {actionType === 'borrow' && (
               <>
+               <label className="block text-sm mt-2">Quantity</label>
                 <input
                 type="number"
                 min={1}

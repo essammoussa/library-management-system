@@ -15,7 +15,7 @@ export const UserBookCard: React.FC<Props> = ({ book, onReturn }) => {
   const today = new Date();
   const due = new Date(book.dueDate);
   const overdueDays = Math.max(Math.floor((today.getTime() - due.getTime()) / (1000 * 60 * 60 * 24)), 0);
-  const fine = (overdueDays * 0.5).toFixed(2);
+  const fine = (overdueDays * 1).toFixed(2);
 
   return (
     <div className="border rounded-lg p-4 bg-card space-y-2">

@@ -3,13 +3,32 @@ import UserBookCard from '@/components/UserBookCard';
 import { UserBookState } from '@/types/book';
 
 export default function MyBooks() {
-  const [userBooks, setUserBooks] = useState<UserBookState>({ borrowed: [], reserved: [] });
+  const [userBooks, setUserBooks] = useState<UserBookState>({ borrowed: [], reserved: [] }); 
 
   useEffect(() => {
-    const borrowed = JSON.parse(localStorage.getItem('borrowedBooks') || '[]');
-    const reserved = JSON.parse(localStorage.getItem('reservedBooks') || '[]');
-    setUserBooks({ borrowed, reserved });
-  }, []);
+  const borrowed = JSON.parse(localStorage.getItem('borrowedBooks') || '[]');
+  const reserved = JSON.parse(localStorage.getItem('reservedBooks') || '[]');
+
+  const DAILY_RATE = 1; // $1 per day
+  const updatedBorrowed = borrowed.map((b: any) => {
+    const today = new Date();
+    const due = new Date(b.dueDate);
+    const overdueDays = Math.max(
+      Math.floor((today.getTime() - due.getTime()) / (1000 * 60 * 60 * 24)),
+      0
+    );
+
+    return { 
+      ...b, 
+      overdueDays, 
+      fineAmount: overdueDays * DAILY_RATE 
+    };
+  });
+
+  setUserBooks({ borrowed: updatedBorrowed, reserved });
+}, []);
+
+
 
   const handleReturn = (bookId: string) => {
     const updatedBorrowed = userBooks.borrowed.filter(b => b.bookId !== bookId);

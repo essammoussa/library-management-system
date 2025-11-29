@@ -5,18 +5,24 @@ export default function MyFines() {
   const [borrowedBooks, setBorrowedBooks] = useState<any[]>([]);
   const [totalFines, setTotalFines] = useState(0);
 
-  useEffect(() => {
-    const borrowed = JSON.parse(localStorage.getItem('borrowedBooks') || '[]');
-    setBorrowedBooks(borrowed);
+ useEffect(() => {
+  const borrowed = JSON.parse(localStorage.getItem('borrowedBooks') || '[]');
+  setBorrowedBooks(borrowed);
 
-    const fines = borrowed.reduce((acc, b) => {
-      const today = new Date();
-      const due = new Date(b.dueDate);
-      const overdueDays = Math.max(Math.floor((today.getTime() - due.getTime()) / (1000*60*60*24)), 0);
-      return acc + overdueDays * 0.5; 
-    }, 0);
-    setTotalFines(fines.toFixed(2)); 
-  }, []);
+  const DAILY_RATE = 1; // $1 per day, change this to 0.5 if needed
+  const fines = borrowed.reduce((acc, b) => {
+    const today = new Date();
+    const due = new Date(b.dueDate);
+    const overdueDays = Math.max(
+      Math.floor((today.getTime() - due.getTime()) / (1000 * 60 * 60 * 24)),
+      0
+    );
+    return acc + overdueDays * DAILY_RATE; 
+  }, 0);
+
+  setTotalFines(fines.toFixed(2));
+}, []);
+
 
   return (
     <div className="p-6 space-y-6">
@@ -29,7 +35,7 @@ export default function MyFines() {
             const today = new Date();
             const due = new Date(book.dueDate);
             const overdueDays = Math.max(Math.floor((today.getTime() - due.getTime()) / (1000*60*60*24)), 0);
-            const fine = (overdueDays * 0.5).toFixed(2);
+            const fine = (overdueDays * 1).toFixed(2);
             return overdueDays > 0 ? (
               <div key={book.bookId} className="border p-4 rounded bg-card">
                 <p>{book.bookTitle} - Overdue {overdueDays} days - Fine ${fine}</p>

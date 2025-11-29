@@ -18,7 +18,7 @@ import Members from './pages/Members';
 import Borrowing from './pages/Borrowing';
 import Reservations from './pages/Reservations';
 import NotFound from './pages/NotFound';
-import Fines from './pages/Fines';
+import FinesList from '@/pages/FinesList';
 
 // User Pages
 import UserCatalog from './pages/UserCatalog';
@@ -54,7 +54,7 @@ function App() {
           <Route path="members" element={<Members />} />
           <Route path="borrowing" element={<Borrowing />} />
           <Route path="reservations" element={<Reservations />} />
-          <Route path="fines" element={<Fines />} />
+          <Route path="fines" element={<FinesList />} />
         </Route>
 
         {/* User Routes */}
