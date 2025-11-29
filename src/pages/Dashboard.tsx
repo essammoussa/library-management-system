@@ -7,7 +7,7 @@ import { TopCategoriesChart } from "@/components/dashboard/TopCategoriesChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-// Dummy data for dashboard
+// --- Dummy data for dashboard statistics ---
 const stats = {
   totalBooks: { value: 1247, trend: { value: 12, isPositive: true } },
   totalMembers: { value: 342, trend: { value: 8, isPositive: true } },
@@ -16,6 +16,7 @@ const stats = {
   pendingReservations: { value: 12, trend: { value: 15, isPositive: true } },
 };
 
+// --- Dummy data for most borrowed books ---
 const mostBorrowedBooks = [
   { id: "1", title: "The Great Gatsby", author: "F. Scott Fitzgerald", borrowCount: 45 },
   { id: "2", title: "To Kill a Mockingbird", author: "Harper Lee", borrowCount: 42 },
@@ -24,6 +25,7 @@ const mostBorrowedBooks = [
   { id: "5", title: "The Catcher in the Rye", author: "J.D. Salinger", borrowCount: 31 },
 ];
 
+// --- Dummy data for recent activities timeline ---
 const recentActivities = [
   {
     icon: BookCheck,
@@ -65,7 +67,7 @@ const recentActivities = [
 const Dashboard = () => {
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Header Section */}
       <div>
         <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
         <p className="text-muted-foreground mt-2">
@@ -73,8 +75,9 @@ const Dashboard = () => {
         </p>
       </div>
 
-      {/* Stats Grid */}
+      {/* --- Stats Grid --- */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+        {/* Each DashboardCard displays a key statistic with trend indicator */}
         <DashboardCard
           title="Total Books"
           value={stats.totalBooks.value}
@@ -112,9 +115,9 @@ const Dashboard = () => {
         />
       </div>
 
-      {/* Charts and Most Borrowed Books */}
+      {/* --- Charts & Most Borrowed Books Section --- */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        {/* Borrowing Trends Chart */}
+        {/* Borrowing Trends Chart (spans 4 columns) */}
         <div className="lg:col-span-4">
           <ChartContainer
             title="Borrowing Trends"
@@ -124,7 +127,7 @@ const Dashboard = () => {
           </ChartContainer>
         </div>
 
-        {/* Most Borrowed Books */}
+        {/* Most Borrowed Books Card (spans 3 columns) */}
         <div className="lg:col-span-3">
           <Card>
             <CardHeader>
@@ -134,13 +137,16 @@ const Dashboard = () => {
               <div className="space-y-4">
                 {mostBorrowedBooks.map((book, index) => (
                   <div key={book.id} className="flex items-center gap-4">
+                    {/* Ranking circle */}
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold text-sm">
                       {index + 1}
                     </div>
+                    {/* Book title and author */}
                     <div className="flex-1 space-y-1">
                       <p className="text-sm font-medium leading-none">{book.title}</p>
                       <p className="text-xs text-muted-foreground">{book.author}</p>
                     </div>
+                    {/* Borrow count */}
                     <Badge variant="secondary">{book.borrowCount}</Badge>
                   </div>
                 ))}
@@ -150,9 +156,9 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Top Categories Chart and Recent Activity */}
+      {/* --- Top Categories Chart & Recent Activity Section --- */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        {/* Top Categories Chart */}
+        {/* Top Categories Chart (spans 4 columns) */}
         <div className="lg:col-span-4">
           <ChartContainer
             title="Top Categories"
@@ -162,7 +168,7 @@ const Dashboard = () => {
           </ChartContainer>
         </div>
 
-        {/* Recent Activity Timeline */}
+        {/* Recent Activity Timeline (spans 3 columns) */}
         <div className="lg:col-span-3">
           <Card>
             <CardHeader>
@@ -170,6 +176,7 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
+                {/* Map each activity to ActivityItem */}
                 {recentActivities.map((activity, index) => (
                   <ActivityItem
                     key={index}

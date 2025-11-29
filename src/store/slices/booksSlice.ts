@@ -2,14 +2,16 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { bookApi } from "@/api/bookApi";
 import { Book } from "@/data/books";
 
+// Define the state structure for books
 interface BooksState {
-  books: Book[];
-  currentBook: Book | null;
-  categories: string[];
-  loading: boolean;
-  error: string | null;
+  books: Book[];            // All books in the system
+  currentBook: Book | null; // Single book selected for details/edit
+  categories: string[];     // Book categories
+  loading: boolean;         // Loading state for async actions
+  error: string | null;     // Error messages
 }
 
+// Initial state
 const initialState: BooksState = {
   books: [],
   currentBook: null,
@@ -18,90 +20,93 @@ const initialState: BooksState = {
   error: null,
 };
 
-// Async thunks
+// ------------------- ASYNC THUNKS ------------------- //
+// These are async actions that call the API and handle data
+
 export const fetchBooks = createAsyncThunk("books/fetchAll", async () => {
-  return await bookApi.getAll();
+  return await bookApi.getAll(); // Get all books
 });
 
 export const fetchBookById = createAsyncThunk(
   "books/fetchById",
   async (id: string) => {
-    return await bookApi.getById(id);
+    return await bookApi.getById(id); // Get a single book by ID
   }
 );
 
 export const searchBooks = createAsyncThunk(
   "books/search",
   async (query: string) => {
-    return await bookApi.search(query);
+    return await bookApi.search(query); // Search books by title/author
   }
 );
 
 export const fetchBooksByCategory = createAsyncThunk(
   "books/fetchByCategory",
   async (category: string) => {
-    return await bookApi.getByCategory(category);
+    return await bookApi.getByCategory(category); // Filter books by category
   }
 );
 
 export const fetchBooksByStatus = createAsyncThunk(
   "books/fetchByStatus",
   async (status: Book["status"]) => {
-    return await bookApi.getByStatus(status);
+    return await bookApi.getByStatus(status); // Filter books by availability
   }
 );
 
 export const createBook = createAsyncThunk(
   "books/create",
   async (bookData: Omit<Book, "id">) => {
-    return await bookApi.create(bookData);
+    return await bookApi.create(bookData); // Create a new book
   }
 );
 
 export const updateBook = createAsyncThunk(
   "books/update",
   async ({ id, data }: { id: string; data: Partial<Book> }) => {
-    return await bookApi.update(id, data);
+    return await bookApi.update(id, data); // Update an existing book
   }
 );
 
 export const deleteBook = createAsyncThunk(
   "books/delete",
   async (id: string) => {
-    await bookApi.delete(id);
-    return id;
+    await bookApi.delete(id); // Delete a book
+    return id; // Return the deleted book ID
   }
 );
 
 export const bulkDeleteBooks = createAsyncThunk(
   "books/bulkDelete",
   async (ids: string[]) => {
-    await bookApi.bulkDelete(ids);
-    return ids;
+    await bookApi.bulkDelete(ids); // Delete multiple books
+    return ids; // Return the deleted IDs
   }
 );
 
 export const fetchCategories = createAsyncThunk(
   "books/fetchCategories",
   async () => {
-    return await bookApi.getCategories();
+    return await bookApi.getCategories(); // Get all categories
   }
 );
 
+// ------------------- SLICE ------------------- //
 const booksSlice = createSlice({
   name: "books",
   initialState,
   reducers: {
     clearError: (state) => {
-      state.error = null;
+      state.error = null; // Reset error
     },
     clearCurrentBook: (state) => {
-      state.currentBook = null;
+      state.currentBook = null; // Reset selected book
     },
   },
   extraReducers: (builder) => {
     builder
-      // Fetch all books
+      // --- Fetch all books ---
       .addCase(fetchBooks.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -114,7 +119,8 @@ const booksSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || "Failed to fetch books";
       })
-      // Fetch book by ID
+
+      // --- Fetch book by ID ---
       .addCase(fetchBookById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -127,7 +133,8 @@ const booksSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || "Failed to fetch book";
       })
-      // Search books
+
+      // --- Search books ---
       .addCase(searchBooks.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -140,15 +147,18 @@ const booksSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || "Failed to search books";
       })
-      // Fetch by category
+
+      // --- Filter by category ---
       .addCase(fetchBooksByCategory.fulfilled, (state, action) => {
         state.books = action.payload;
       })
-      // Fetch by status
+
+      // --- Filter by status ---
       .addCase(fetchBooksByStatus.fulfilled, (state, action) => {
         state.books = action.payload;
       })
-      // Create book
+
+      // --- Create book ---
       .addCase(createBook.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -161,7 +171,8 @@ const booksSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || "Failed to create book";
       })
-      // Update book
+
+      // --- Update book ---
       .addCase(updateBook.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -170,19 +181,16 @@ const booksSlice = createSlice({
         state.loading = false;
         if (action.payload) {
           const index = state.books.findIndex((b) => b.id === action.payload!.id);
-          if (index !== -1) {
-            state.books[index] = action.payload;
-          }
-          if (state.currentBook?.id === action.payload.id) {
-            state.currentBook = action.payload;
-          }
+          if (index !== -1) state.books[index] = action.payload;
+          if (state.currentBook?.id === action.payload.id) state.currentBook = action.payload;
         }
       })
       .addCase(updateBook.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to update book";
       })
-      // Delete book
+
+      // --- Delete book ---
       .addCase(deleteBook.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -195,16 +203,21 @@ const booksSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || "Failed to delete book";
       })
-      // Bulk delete
+
+      // --- Bulk delete ---
       .addCase(bulkDeleteBooks.fulfilled, (state, action) => {
         state.books = state.books.filter((b) => !action.payload.includes(b.id));
       })
-      // Fetch categories
+
+      // --- Fetch categories ---
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.categories = action.payload;
       });
   },
 });
 
+// Export actions
 export const { clearError, clearCurrentBook } = booksSlice.actions;
+
+// Export reducer
 export default booksSlice.reducer;

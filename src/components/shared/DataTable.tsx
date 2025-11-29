@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table"; // Custom table components
 import {
   ColumnDef,
   flexRender,
@@ -16,50 +16,55 @@ import {
   SortingState,
   getFilteredRowModel,
   ColumnFiltersState,
-} from "@tanstack/react-table";
+} from "@tanstack/react-table"; // React Table library
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  searchKey?: string;
-  searchValue?: string;
-  onSearchChange?: (value: string) => void;
+  columns: ColumnDef<TData, TValue>[]; // Column definitions
+  data: TData[]; // Data rows
+  searchKey?: string; // Optional key for search (not implemented in this code)
+  searchValue?: string; // Optional search value
+  onSearchChange?: (value: string) => void; // Optional search callback
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  // Local state for sorting
   const [sorting, setSorting] = useState<SortingState>([]);
+  // Local state for column filters
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
+  // Initialize the react-table instance
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(), // Base row model
+    getPaginationRowModel: getPaginationRowModel(), // For pagination
+    getSortedRowModel: getSortedRowModel(), // For sorting
+    getFilteredRowModel: getFilteredRowModel(), // For filtering
+    onSortingChange: setSorting, // Update sorting state
+    onColumnFiltersChange: setColumnFilters, // Update filters state
     state: {
       sorting,
       columnFilters,
     },
     initialState: {
       pagination: {
-        pageSize: 10,
+        pageSize: 10, // Default 10 rows per page
       },
     },
   });
 
   return (
     <div className="space-y-4">
+      {/* Table container */}
       <div className="rounded-md border border-border bg-card">
         <Table>
+          {/* Table header */}
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -76,6 +81,8 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
+
+          {/* Table body */}
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
@@ -88,6 +95,7 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))
             ) : (
+              // Show if no rows
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results found.
@@ -98,7 +106,9 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
+      {/* Pagination controls */}
       <div className="flex items-center justify-between">
+        {/* Showing X to Y of Z results */}
         <div className="text-sm text-muted-foreground">
           Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{" "}
           {Math.min(
@@ -107,7 +117,10 @@ export function DataTable<TData, TValue>({
           )}{" "}
           of {table.getFilteredRowModel().rows.length} results
         </div>
+
+        {/* Pagination buttons */}
         <div className="flex items-center gap-2">
+          {/* First page */}
           <Button
             variant="outline"
             size="icon"
@@ -116,6 +129,8 @@ export function DataTable<TData, TValue>({
           >
             <ChevronsLeft className="h-4 w-4" />
           </Button>
+
+          {/* Previous page */}
           <Button
             variant="outline"
             size="icon"
@@ -124,9 +139,13 @@ export function DataTable<TData, TValue>({
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
+
+          {/* Current page indicator */}
           <span className="text-sm text-muted-foreground">
             Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
           </span>
+
+          {/* Next page */}
           <Button
             variant="outline"
             size="icon"
@@ -135,6 +154,8 @@ export function DataTable<TData, TValue>({
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
+
+          {/* Last page */}
           <Button
             variant="outline"
             size="icon"

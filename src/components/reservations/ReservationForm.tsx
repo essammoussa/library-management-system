@@ -30,17 +30,20 @@ import { fetchBooks } from "@/store/slices/booksSlice";
 import { fetchMembers } from "@/store/slices/membersSlice";
 import { Badge } from "@/components/ui/badge";
 
+// Validation schema using Zod
 const reservationSchema = z.object({
-  bookId: z.string().min(1, "Please select a book"),
-  memberId: z.string().min(1, "Please select a member"),
+  bookId: z.string().min(1, "Please select a book"), // Book selection required
+  memberId: z.string().min(1, "Please select a member"), // Member selection required
 });
 
+// Type inferred from schema for use with react-hook-form
 type ReservationFormData = z.infer<typeof reservationSchema>;
 
+// Props for the ReservationForm component
 interface ReservationFormProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onSubmit: (data: ReservationFormData) => void;
+  open: boolean; // Dialog open/close state
+  onOpenChange: (open: boolean) => void; // Callback to change open state
+  onSubmit: (data: ReservationFormData) => void; // Callback when form is submitted
 }
 
 export function ReservationForm({
@@ -49,9 +52,12 @@ export function ReservationForm({
   onSubmit,
 }: ReservationFormProps) {
   const dispatch = useAppDispatch();
+
+  // Get books and members from Redux store
   const { books } = useAppSelector((state) => state.books);
   const { members } = useAppSelector((state) => state.members);
 
+  // Initialize react-hook-form with default values and zod validation
   const form = useForm<ReservationFormData>({
     resolver: zodResolver(reservationSchema),
     defaultValues: {
@@ -60,6 +66,7 @@ export function ReservationForm({
     },
   });
 
+  // Fetch books and members when the dialog opens
   useEffect(() => {
     if (open) {
       dispatch(fetchBooks());
@@ -67,11 +74,13 @@ export function ReservationForm({
     }
   }, [open, dispatch]);
 
+  // Handle form submission
   const handleSubmit = (data: ReservationFormData) => {
-    onSubmit(data);
-    form.reset();
+    onSubmit(data); // Pass form data to parent
+    form.reset(); // Reset form after submission
   };
 
+  // Find the selected book to check availability
   const selectedBook = books.find((b) => b.id === form.watch("bookId"));
 
   return (
@@ -86,6 +95,7 @@ export function ReservationForm({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+            {/* Member selection */}
             <FormField
               control={form.control}
               name="memberId"
@@ -100,7 +110,7 @@ export function ReservationForm({
                     </FormControl>
                     <SelectContent>
                       {members
-                        .filter((m) => m.status === "active")
+                        .filter((m) => m.status === "active") // Only active members
                         .map((member) => (
                           <SelectItem key={member.id} value={member.id}>
                             {member.name} - {member.membershipId}
@@ -108,11 +118,12 @@ export function ReservationForm({
                         ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
+                  <FormMessage /> {/* Shows validation errors */}
                 </FormItem>
               )}
             />
 
+            {/* Book selection */}
             <FormField
               control={form.control}
               name="bookId"
@@ -140,11 +151,12 @@ export function ReservationForm({
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
+                  <FormMessage /> {/* Validation errors */}
                 </FormItem>
               )}
             />
 
+            {/* Warning if selected book is unavailable */}
             {selectedBook && selectedBook.availableQuantity === 0 && (
               <div className="bg-muted p-3 rounded-md text-sm">
                 <p className="text-muted-foreground">
@@ -154,7 +166,9 @@ export function ReservationForm({
               </div>
             )}
 
+            {/* Action buttons */}
             <div className="flex justify-end gap-2 pt-4">
+              {/* Cancel button */}
               <Button
                 type="button"
                 variant="outline"
@@ -162,6 +176,8 @@ export function ReservationForm({
               >
                 Cancel
               </Button>
+
+              {/* Submit button */}
               <Button type="submit">Create Reservation</Button>
             </div>
           </form>

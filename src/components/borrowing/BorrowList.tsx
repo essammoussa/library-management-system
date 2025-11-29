@@ -17,11 +17,11 @@ import { Badge } from "@/components/ui/badge";
 import { RotateCcw, ArrowUpDown } from "lucide-react";
 
 interface BorrowListProps {
-  borrowRecords: BorrowRecord[];
-  books: Book[];
-  members: Member[];
-  onReturn: (record: BorrowRecord) => void;
-  loading?: boolean;
+  borrowRecords: BorrowRecord[]; // List of borrow records
+  books: Book[];                 // All books (needed for names & available quantity)
+  members: Member[];             // All members (needed for names)
+  onReturn: (record: BorrowRecord) => void; // Callback to handle returning a book
+  loading?: boolean;             // Optional loading state
 }
 
 export function BorrowList({
@@ -31,41 +31,49 @@ export function BorrowList({
   onReturn,
   loading = false,
 }: BorrowListProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  // --- Local state ---
+  const [searchQuery, setSearchQuery] = useState(""); // Search by book title or member name
+  const [statusFilter, setStatusFilter] = useState<string>("all"); // Filter by borrow status
 
+  // --- Helper functions ---
+  
+  // Convert book ID to book title
   const getBookTitle = (bookId: string) => {
     const book = books.find((b) => b.id === bookId);
     return book ? book.title : "Unknown Book";
   };
 
+  // Convert member ID to member name
   const getMemberName = (memberId: string) => {
     const member = members.find((m) => m.id === memberId);
     return member ? member.name : "Unknown Member";
   };
 
+  // Map status to UI badge color
   const getStatusVariant = (status: BorrowRecord["status"]) => {
     switch (status) {
       case "active":
-        return "default";
+        return "default"; // Normal badge for active
       case "overdue":
-        return "destructive";
+        return "destructive"; // Red badge for overdue
       case "returned":
-        return "secondary";
+        return "secondary"; // Gray/secondary badge for returned
       default:
         return "default";
     }
   };
 
+  // Determine current status based on return date and due date
   const calculateStatus = (record: BorrowRecord): BorrowRecord["status"] => {
-    if (record.returnDate) return "returned";
+    if (record.returnDate) return "returned"; // Already returned
     const today = new Date();
     const dueDate = new Date(record.dueDate);
-    return today > dueDate ? "overdue" : "active";
+    return today > dueDate ? "overdue" : "active"; // Overdue if past due
   };
 
+  // Calculate late fee dynamically if overdue
   const calculateLateFee = (record: BorrowRecord): number => {
-    if (record.returnDate) return record.fine;
+    if (record.returnDate) return record.fine; // Already returned, use recorded fine
 
     const today = new Date();
     const dueDate = new Date(record.dueDate);
@@ -73,25 +81,25 @@ export function BorrowList({
       (today.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24)
     );
 
-    if (daysLate <= 0) return 0;
-    return daysLate * 0.5;
+    if (daysLate <= 0) return 0; // Not late
+    return daysLate * 0.5; // $0.5 per day
   };
 
+  // --- Define table columns ---
   const columns: ColumnDef<BorrowRecord>[] = [
     {
       accessorKey: "bookId",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="hover:bg-muted"
-          >
-            Book
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        // Sortable column header for Book
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-muted"
+        >
+          Book
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
       cell: ({ row }) => (
         <div className="font-medium">{getBookTitle(row.getValue("bookId"))}</div>
       ),
@@ -105,36 +113,32 @@ export function BorrowList({
     },
     {
       accessorKey: "borrowDate",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="hover:bg-muted"
-          >
-            Borrow Date
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-muted"
+        >
+          Borrow Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
       cell: ({ row }) => (
         <div>{new Date(row.getValue("borrowDate")).toLocaleDateString()}</div>
       ),
     },
     {
       accessorKey: "dueDate",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="hover:bg-muted"
-          >
-            Due Date
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-muted"
+        >
+          Due Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
       cell: ({ row }) => (
         <div>{new Date(row.getValue("dueDate")).toLocaleDateString()}</div>
       ),
@@ -183,7 +187,7 @@ export function BorrowList({
       cell: ({ row }) => {
         const record = row.original;
         const status = calculateStatus(record);
-        const canReturn = status !== "returned";
+        const canReturn = status !== "returned"; // Only allow return if not returned
 
         return (
           <Button
@@ -201,6 +205,7 @@ export function BorrowList({
     },
   ];
 
+  // --- Filter records based on search and status ---
   const filteredRecords = borrowRecords.filter((record) => {
     const bookTitle = getBookTitle(record.bookId).toLowerCase();
     const memberName = getMemberName(record.memberId).toLowerCase();
@@ -214,6 +219,7 @@ export function BorrowList({
     return matchesSearch && matchesStatus;
   });
 
+  // --- Show loading state if needed ---
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -222,8 +228,10 @@ export function BorrowList({
     );
   }
 
+  // --- Main render ---
   return (
     <div className="space-y-4">
+      {/* Search and filter controls */}
       <div className="flex flex-col sm:flex-row gap-4">
         <Input
           placeholder="Search by book or member name..."
@@ -244,6 +252,7 @@ export function BorrowList({
         </Select>
       </div>
 
+      {/* Borrow records table */}
       <DataTable columns={columns} data={filteredRecords} />
     </div>
   );

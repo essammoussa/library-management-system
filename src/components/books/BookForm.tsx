@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { useForm } from "react-hook-form"; // React Hook Form for managing form state
+import { zodResolver } from "@hookform/resolvers/zod"; // Zod resolver for validation
+import * as z from "zod"; // Zod for schema validation
 import {
   Form,
   FormControl,
@@ -9,37 +9,43 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from "@/components/ui/form"; // Custom form components
+import { Input } from "@/components/ui/input"; // Input component
+import { Button } from "@/components/ui/button"; // Button component
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Book } from "@/data/books";
+} from "@/components/ui/select"; // Custom Select components
+import { Book } from "@/data/books"; // Book type
 
+// --------------------------
+// Validation schema using Zod
+// --------------------------
 const bookSchema = z.object({
   title: z.string().trim().min(1, "Title is required").max(200, "Title too long"),
   author: z.string().trim().min(1, "Author is required").max(100, "Author name too long"),
   isbn: z.string().trim().min(10, "Invalid ISBN").max(17, "Invalid ISBN"),
   category: z.string().min(1, "Category is required"),
-  publishYear: z.coerce.number().min(1000).max(new Date().getFullYear() + 1),
+  publishYear: z.coerce.number().min(1000).max(new Date().getFullYear() + 1), // Convert string to number
   quantity: z.coerce.number().min(1, "Quantity must be at least 1"),
   availableQuantity: z.coerce.number().min(0, "Available quantity cannot be negative"),
-  status: z.enum(["available", "borrowed", "reserved"]),
+  status: z.enum(["available", "borrowed", "reserved"]), // Only these values allowed
 });
 
-type BookFormValues = z.infer<typeof bookSchema>;
+type BookFormValues = z.infer<typeof bookSchema>; // Infer TS type from Zod schema
 
+// --------------------------
+// Props for BookForm component
+// --------------------------
 interface BookFormProps {
-  book?: Book;
-  categories: string[];
-  onSubmit: (data: Omit<Book, "id"> | Book) => void;
-  onCancel: () => void;
-  isLoading?: boolean;
+  book?: Book; // Optional: if editing an existing book
+  categories: string[]; // List of available categories for the dropdown
+  onSubmit: (data: Omit<Book, "id"> | Book) => void; // Callback when form is submitted
+  onCancel: () => void; // Callback for cancel button
+  isLoading?: boolean; // Loading state for async operations
 }
 
 export const BookForm = ({
@@ -49,8 +55,11 @@ export const BookForm = ({
   onCancel,
   isLoading,
 }: BookFormProps) => {
+  // --------------------------
+  // Initialize the form
+  // --------------------------
   const form = useForm<BookFormValues>({
-    resolver: zodResolver(bookSchema),
+    resolver: zodResolver(bookSchema), // Use Zod for validation
     defaultValues: book || {
       title: "",
       author: "",
@@ -63,16 +72,24 @@ export const BookForm = ({
     },
   });
 
+  // --------------------------
+  // Reset form values when editing an existing book
+  // --------------------------
   useEffect(() => {
     if (book) {
       form.reset(book);
     }
   }, [book, form]);
 
+  // --------------------------
+  // Handle form submission
+  // --------------------------
   const handleSubmit = (data: BookFormValues) => {
     if (book) {
+      // If editing, include book id
       onSubmit({ ...data, id: book.id } as Book);
     } else {
+      // If adding new book, no id yet
       onSubmit(data as Omit<Book, "id">);
     }
   };
@@ -80,6 +97,9 @@ export const BookForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        {/* --------------------------
+            Title field
+        -------------------------- */}
         <FormField
           control={form.control}
           name="title"
@@ -89,11 +109,14 @@ export const BookForm = ({
               <FormControl>
                 <Input placeholder="Enter book title" {...field} />
               </FormControl>
-              <FormMessage />
+              <FormMessage /> {/* Displays validation errors */}
             </FormItem>
           )}
         />
 
+        {/* --------------------------
+            Author field
+        -------------------------- */}
         <FormField
           control={form.control}
           name="author"
@@ -108,6 +131,9 @@ export const BookForm = ({
           )}
         />
 
+        {/* --------------------------
+            ISBN field
+        -------------------------- */}
         <FormField
           control={form.control}
           name="isbn"
@@ -122,6 +148,9 @@ export const BookForm = ({
           )}
         />
 
+        {/* --------------------------
+            Category dropdown
+        -------------------------- */}
         <FormField
           control={form.control}
           name="category"
@@ -147,6 +176,9 @@ export const BookForm = ({
           )}
         />
 
+        {/* --------------------------
+            Publish Year and Total Quantity
+        -------------------------- */}
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -177,6 +209,9 @@ export const BookForm = ({
           />
         </div>
 
+        {/* --------------------------
+            Available Quantity and Status
+        -------------------------- */}
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -216,6 +251,9 @@ export const BookForm = ({
           />
         </div>
 
+        {/* --------------------------
+            Action Buttons
+        -------------------------- */}
         <div className="flex justify-end gap-3 pt-4">
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel

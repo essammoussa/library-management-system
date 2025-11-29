@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form"; // For form handling
+import { zodResolver } from "@hookform/resolvers/zod"; // Validation with Zod
 import * as z from "zod";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchBooks } from "@/store/slices/booksSlice";
@@ -24,9 +24,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { BorrowRecord } from "@/data/borrowing";
 
+// --------------------------
+// Form validation schema
+// --------------------------
 const borrowFormSchema = z.object({
-  bookId: z.string().min(1, "Please select a book"),
-  memberId: z.string().min(1, "Please select a member"),
+  bookId: z.string().min(1, "Please select a book"), // Require selection
+  memberId: z.string().min(1, "Please select a member"), // Require selection
   borrowDate: z.string(),
   dueDate: z.string(),
 });
@@ -34,22 +37,28 @@ const borrowFormSchema = z.object({
 type BorrowFormValues = z.infer<typeof borrowFormSchema>;
 
 interface BorrowFormProps {
-  onSubmit: (data: Omit<BorrowRecord, "id" | "returnDate" | "fine">) => void;
-  onCancel: () => void;
+  onSubmit: (data: Omit<BorrowRecord, "id" | "returnDate" | "fine">) => void; // Callback when form submits
+  onCancel: () => void; // Callback when form is cancelled
 }
 
 export function BorrowForm({ onSubmit, onCancel }: BorrowFormProps) {
   const dispatch = useAppDispatch();
-  const { books } = useAppSelector((state) => state.books);
-  const { members } = useAppSelector((state) => state.members);
+  const { books } = useAppSelector((state) => state.books); // All books from store
+  const { members } = useAppSelector((state) => state.members); // All members from store
 
-  const today = new Date().toISOString().split("T")[0];
-  const defaultDueDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
+  // --------------------------
+  // Default dates
+  // --------------------------
+  const today = new Date().toISOString().split("T")[0]; // Today's date in yyyy-mm-dd
+  const defaultDueDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000) // 14 days from today
     .toISOString()
     .split("T")[0];
 
+  // --------------------------
+  // Initialize React Hook Form
+  // --------------------------
   const form = useForm<BorrowFormValues>({
-    resolver: zodResolver(borrowFormSchema),
+    resolver: zodResolver(borrowFormSchema), // Validate using Zod
     defaultValues: {
       bookId: "",
       memberId: "",
@@ -58,18 +67,28 @@ export function BorrowForm({ onSubmit, onCancel }: BorrowFormProps) {
     },
   });
 
+  // --------------------------
+  // Fetch books and members when component mounts
+  // --------------------------
   useEffect(() => {
     dispatch(fetchBooks());
     dispatch(fetchActiveMembers());
   }, [dispatch]);
 
+  // --------------------------
+  // Filter available books and active members
+  // --------------------------
   const availableBooks = books.filter((book) => book.availableQuantity > 0);
   const activeMembers = members.filter((member) => member.status === "active");
 
+  // --------------------------
+  // Form submission handler
+  // --------------------------
   const handleSubmit = (data: BorrowFormValues) => {
     const selectedBook = books.find((b) => b.id === data.bookId);
     const selectedMember = members.find((m) => m.id === data.memberId);
 
+    // Pass formatted data to parent component
     onSubmit({
       bookId: data.bookId,
       memberId: data.memberId,
@@ -81,9 +100,12 @@ export function BorrowForm({ onSubmit, onCancel }: BorrowFormProps) {
     });
   };
 
+  // --------------------------
+  // Automatically update due date when borrow date changes
+  // --------------------------
   const handleBorrowDateChange = (date: string) => {
     form.setValue("borrowDate", date);
-    const dueDate = new Date(new Date(date).getTime() + 14 * 24 * 60 * 60 * 1000)
+    const dueDate = new Date(new Date(date).getTime() + 14 * 24 * 60 * 60 * 1000) // 14 days later
       .toISOString()
       .split("T")[0];
     form.setValue("dueDate", dueDate);
@@ -92,6 +114,9 @@ export function BorrowForm({ onSubmit, onCancel }: BorrowFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        {/* --------------------------
+            Member selection
+        -------------------------- */}
         <FormField
           control={form.control}
           name="memberId"
@@ -117,6 +142,9 @@ export function BorrowForm({ onSubmit, onCancel }: BorrowFormProps) {
           )}
         />
 
+        {/* --------------------------
+            Book selection
+        -------------------------- */}
         <FormField
           control={form.control}
           name="bookId"
@@ -147,6 +175,9 @@ export function BorrowForm({ onSubmit, onCancel }: BorrowFormProps) {
           )}
         />
 
+        {/* --------------------------
+            Borrow Date
+        -------------------------- */}
         <FormField
           control={form.control}
           name="borrowDate"
@@ -158,7 +189,7 @@ export function BorrowForm({ onSubmit, onCancel }: BorrowFormProps) {
                   type="date"
                   {...field}
                   onChange={(e) => handleBorrowDateChange(e.target.value)}
-                  max={today}
+                  max={today} // Cannot pick future dates
                 />
               </FormControl>
               <FormMessage />
@@ -166,6 +197,9 @@ export function BorrowForm({ onSubmit, onCancel }: BorrowFormProps) {
           )}
         />
 
+        {/* --------------------------
+            Due Date (readonly, auto-calculated)
+        -------------------------- */}
         <FormField
           control={form.control}
           name="dueDate"
@@ -180,6 +214,9 @@ export function BorrowForm({ onSubmit, onCancel }: BorrowFormProps) {
           )}
         />
 
+        {/* --------------------------
+            Buttons
+        -------------------------- */}
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel

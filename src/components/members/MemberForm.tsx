@@ -21,6 +21,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Member } from "@/data/members";
 
+// Validation schema using Zod
 const memberFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
@@ -32,15 +33,17 @@ const memberFormSchema = z.object({
   borrowedBooks: z.coerce.number().min(0, "Borrowed books must be 0 or more"),
 });
 
+// TypeScript type inferred from the schema
 type MemberFormValues = z.infer<typeof memberFormSchema>;
 
 interface MemberFormProps {
-  member?: Member;
-  onSubmit: (data: Omit<Member, "id">) => void;
-  onCancel: () => void;
+  member?: Member; // If provided, form is in edit mode
+  onSubmit: (data: Omit<Member, "id">) => void; // Callback for submitting form
+  onCancel: () => void; // Callback for cancel button
 }
 
 export function MemberForm({ member, onSubmit, onCancel }: MemberFormProps) {
+  // Initialize React Hook Form
   const form = useForm<MemberFormValues>({
     resolver: zodResolver(memberFormSchema),
     defaultValues: member || {
@@ -48,13 +51,14 @@ export function MemberForm({ member, onSubmit, onCancel }: MemberFormProps) {
       email: "",
       phone: "",
       membershipId: "",
-      joinDate: new Date().toISOString().split("T")[0],
+      joinDate: new Date().toISOString().split("T")[0], // Today by default
       status: "active",
       address: "",
       borrowedBooks: 0,
     },
   });
 
+  // Form submit handler
   const handleSubmit = (data: MemberFormValues) => {
     onSubmit(data as Omit<Member, "id">);
   };
@@ -62,6 +66,7 @@ export function MemberForm({ member, onSubmit, onCancel }: MemberFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        {/* Name input */}
         <FormField
           control={form.control}
           name="name"
@@ -71,11 +76,12 @@ export function MemberForm({ member, onSubmit, onCancel }: MemberFormProps) {
               <FormControl>
                 <Input placeholder="Enter member name" {...field} />
               </FormControl>
-              <FormMessage />
+              <FormMessage /> {/* Validation error messages */}
             </FormItem>
           )}
         />
 
+        {/* Email input */}
         <FormField
           control={form.control}
           name="email"
@@ -90,6 +96,7 @@ export function MemberForm({ member, onSubmit, onCancel }: MemberFormProps) {
           )}
         />
 
+        {/* Phone input */}
         <FormField
           control={form.control}
           name="phone"
@@ -104,6 +111,7 @@ export function MemberForm({ member, onSubmit, onCancel }: MemberFormProps) {
           )}
         />
 
+        {/* Membership ID input */}
         <FormField
           control={form.control}
           name="membershipId"
@@ -118,6 +126,7 @@ export function MemberForm({ member, onSubmit, onCancel }: MemberFormProps) {
           )}
         />
 
+        {/* Join Date input */}
         <FormField
           control={form.control}
           name="joinDate"
@@ -132,6 +141,7 @@ export function MemberForm({ member, onSubmit, onCancel }: MemberFormProps) {
           )}
         />
 
+        {/* Status dropdown */}
         <FormField
           control={form.control}
           name="status"
@@ -155,6 +165,7 @@ export function MemberForm({ member, onSubmit, onCancel }: MemberFormProps) {
           )}
         />
 
+        {/* Address textarea */}
         <FormField
           control={form.control}
           name="address"
@@ -169,6 +180,7 @@ export function MemberForm({ member, onSubmit, onCancel }: MemberFormProps) {
           )}
         />
 
+        {/* Borrowed Books input */}
         <FormField
           control={form.control}
           name="borrowedBooks"
@@ -183,13 +195,12 @@ export function MemberForm({ member, onSubmit, onCancel }: MemberFormProps) {
           )}
         />
 
+        {/* Form buttons */}
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel
           </Button>
-          <Button type="submit">
-            {member ? "Update Member" : "Add Member"}
-          </Button>
+          <Button type="submit">{member ? "Update Member" : "Add Member"}</Button>
         </div>
       </form>
     </Form>

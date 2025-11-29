@@ -19,25 +19,24 @@ import {
 } from "@/components/ui/select";
 
 const Reservations = () => {
-  const dispatch = useAppDispatch();
-  const { toast } = useToast();
-  const { reservations, loading } = useAppSelector((state) => state.reservations);
-  const { books } = useAppSelector((state) => state.books);
-  const { members } = useAppSelector((state) => state.members);
+  const dispatch = useAppDispatch(); // Redux dispatch
+  const { toast } = useToast(); // Toast notifications
+  const { reservations, loading } = useAppSelector((state) => state.reservations); // Reservations state
+  const { books } = useAppSelector((state) => state.books); // Books state
+  const { members } = useAppSelector((state) => state.members); // Members state
 
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [isFormOpen, setIsFormOpen] = useState(false); // Controls reservation form modal
+  const [statusFilter, setStatusFilter] = useState<string>("all"); // Status filter for reservations
 
+  // Fetch reservations on component mount
   useEffect(() => {
     dispatch(fetchReservations());
   }, [dispatch]);
 
-  const handleCreateReservation = async (data: {
-    bookId: string;
-    memberId: string;
-  }) => {
-    const book = books.find((b) => b.id === data.bookId);
-    const member = members.find((m) => m.id === data.memberId);
+  // Function to handle creating a new reservation
+  const handleCreateReservation = async (data: { bookId: string; memberId: string }) => {
+    const book = books.find((b) => b.id === data.bookId); // Find selected book
+    const member = members.find((m) => m.id === data.memberId); // Find selected member
 
     if (!book || !member) {
       toast({
@@ -48,11 +47,13 @@ const Reservations = () => {
       return;
     }
 
+    // Set reservation and expiry dates
     const reservationDate = new Date().toISOString().split("T")[0];
     const expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate() + 30);
+    expiryDate.setDate(expiryDate.getDate() + 30); // 30 days expiry
 
     try {
+      // Dispatch createReservation action
       await dispatch(
         createReservation({
           bookId: data.bookId,
@@ -69,7 +70,7 @@ const Reservations = () => {
         title: "Success",
         description: "Reservation created successfully",
       });
-      setIsFormOpen(false);
+      setIsFormOpen(false); // Close form after success
     } catch (error) {
       toast({
         title: "Error",
@@ -79,9 +80,10 @@ const Reservations = () => {
     }
   };
 
+  // Function to cancel a reservation
   const handleCancelReservation = async (id: string) => {
     try {
-      await dispatch(cancelReservation(id)).unwrap();
+      await dispatch(cancelReservation(id)).unwrap(); // Dispatch cancel action
       toast({
         title: "Success",
         description: "Reservation cancelled successfully",
@@ -95,11 +97,13 @@ const Reservations = () => {
     }
   };
 
+  // Filter reservations based on selected status
   const filteredReservations =
     statusFilter === "all"
       ? reservations
       : reservations.filter((r) => r.status === statusFilter);
 
+  // Show loading state while fetching data
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -110,6 +114,7 @@ const Reservations = () => {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Reservations</h1>
@@ -117,12 +122,15 @@ const Reservations = () => {
             Manage book reservations and queue system
           </p>
         </div>
+
+        {/* Button to open reservation form */}
         <Button onClick={() => setIsFormOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />
           New Reservation
         </Button>
       </div>
 
+      {/* Status Filter */}
       <div className="flex gap-4 items-center">
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-[180px]">
@@ -138,17 +146,19 @@ const Reservations = () => {
         </Select>
       </div>
 
+      {/* Reservations Table */}
       <div className="bg-card rounded-lg border">
         <ReservationList
-          reservations={filteredReservations}
-          onCancel={handleCancelReservation}
+          reservations={filteredReservations} // Pass filtered list
+          onCancel={handleCancelReservation} // Cancel handler
         />
       </div>
 
+      {/* Reservation Form Modal */}
       <ReservationForm
-        open={isFormOpen}
-        onOpenChange={setIsFormOpen}
-        onSubmit={handleCreateReservation}
+        open={isFormOpen} // Control modal visibility
+        onOpenChange={setIsFormOpen} // Handle open/close
+        onSubmit={handleCreateReservation} // Submit handler
       />
     </div>
   );

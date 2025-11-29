@@ -21,20 +21,23 @@ import { Book } from "@/data/books";
 import { useToast } from "@/hooks/use-toast";
 
 const Books = () => {
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch(); // Redux dispatch function
   const { books, categories, loading, error } = useAppSelector(
     (state) => state.books
-  );
-  const { toast } = useToast();
+  ); // Access books slice state
+  const { toast } = useToast(); // Toast for notifications
 
+  // Local state for controlling dialog and editing book
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingBook, setEditingBook] = useState<Book | undefined>(undefined);
 
+  // Fetch books and categories when component mounts
   useEffect(() => {
     dispatch(fetchBooks());
     dispatch(fetchCategories());
   }, [dispatch]);
 
+  // Show toast if there is an error in fetching books/categories
   useEffect(() => {
     if (error) {
       toast({
@@ -45,20 +48,23 @@ const Books = () => {
     }
   }, [error, toast]);
 
+  // Open dialog to add a new book
   const handleAddBook = () => {
-    setEditingBook(undefined);
-    setIsFormOpen(true);
+    setEditingBook(undefined); // No book is being edited
+    setIsFormOpen(true); // Open the dialog
   };
 
+  // Open dialog to edit an existing book
   const handleEditBook = (book: Book) => {
-    setEditingBook(book);
-    setIsFormOpen(true);
+    setEditingBook(book); // Set the book being edited
+    setIsFormOpen(true); // Open the dialog
   };
 
+  // Delete a book after confirming with the user
   const handleDeleteBook = async (id: string) => {
     if (confirm("Are you sure you want to delete this book?")) {
       try {
-        await dispatch(deleteBook(id)).unwrap();
+        await dispatch(deleteBook(id)).unwrap(); // Call deleteBook action
         toast({
           title: "Success",
           description: "Book deleted successfully",
@@ -73,21 +79,25 @@ const Books = () => {
     }
   };
 
+  // Handle form submission for adding/updating a book
   const handleSubmitForm = async (data: Omit<Book, "id"> | Book) => {
     try {
       if ("id" in data) {
+        // If book has an id, it's an update
         await dispatch(updateBook({ id: data.id, data })).unwrap();
         toast({
           title: "Success",
           description: "Book updated successfully",
         });
       } else {
+        // Otherwise, it's a new book
         await dispatch(createBook(data)).unwrap();
         toast({
           title: "Success",
           description: "Book added successfully",
         });
       }
+      // Close dialog and reset editingBook state
       setIsFormOpen(false);
       setEditingBook(undefined);
     } catch (err) {
@@ -99,6 +109,7 @@ const Books = () => {
     }
   };
 
+  // Close the form without saving
   const handleCloseForm = () => {
     setIsFormOpen(false);
     setEditingBook(undefined);
@@ -106,6 +117,7 @@ const Books = () => {
 
   return (
     <div className="space-y-6">
+      {/* Header section */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Books</h1>
@@ -113,12 +125,14 @@ const Books = () => {
             Manage your library's book inventory
           </p>
         </div>
+        {/* Add Book Button */}
         <Button onClick={handleAddBook}>
           <Plus className="mr-2 h-4 w-4" />
           Add Book
         </Button>
       </div>
 
+      {/* Book List Table */}
       <BookList
         books={books}
         categories={categories}
@@ -127,6 +141,7 @@ const Books = () => {
         isLoading={loading}
       />
 
+      {/* Add/Edit Book Dialog */}
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -135,11 +150,11 @@ const Books = () => {
             </DialogTitle>
           </DialogHeader>
           <BookForm
-            book={editingBook}
+            book={editingBook} // Pass the book to edit, or undefined for new
             categories={categories}
-            onSubmit={handleSubmitForm}
-            onCancel={handleCloseForm}
-            isLoading={loading}
+            onSubmit={handleSubmitForm} // Handle save
+            onCancel={handleCloseForm} // Handle cancel
+            isLoading={loading} // Show loading state if needed
           />
         </DialogContent>
       </Dialog>

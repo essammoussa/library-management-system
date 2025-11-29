@@ -4,16 +4,16 @@ import { Fine, FineStatus } from '@/types/Fine';
 import { FineCalculator } from '@/lib/fineCalculator';
 
 interface FineFormProps {
-  fine?: Fine; // If provided, edit mode. Otherwise, create mode
-  onSave: (fineData: Omit<Fine, 'id' | 'createdAt'>) => void;
-  onCancel: () => void;
-  isSubmitting?: boolean;
+  fine?: Fine; // If provided, we are editing an existing fine; otherwise, create new
+  onSave: (fineData: Omit<Fine, 'id' | 'createdAt'>) => void; // Callback when form is submitted
+  onCancel: () => void; // Callback when cancel is clicked
+  isSubmitting?: boolean; // Optional flag to indicate loading/submitting state
 }
 
 export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineFormProps) {
-  const isEditMode = !!fine;
+  const isEditMode = !!fine; // Determine if form is in edit mode
 
-  // Form state
+  // --- Form state for all fields ---
   const [formData, setFormData] = useState({
     memberId: fine?.memberId || '',
     memberName: fine?.memberName || '',
@@ -29,7 +29,7 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
     notes: fine?.notes || '',
   });
 
-  // Auto-calculate fine when dates change
+  // --- Auto-calculate fine whenever dueDate or returnDate changes ---
   useEffect(() => {
     if (formData.dueDate) {
       const { daysOverdue, fineAmount } = FineCalculator.calculateFine(
@@ -44,11 +44,13 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
     }
   }, [formData.dueDate, formData.returnDate]);
 
+  // --- Handle form submission ---
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    onSave(formData); // Pass form data to parent
   };
 
+  // --- Handle field changes ---
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -58,26 +60,27 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      {/* --- Modal container --- */}
       <div className="bg-card border border-border rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
+        
+        {/* --- Header with title and close button --- */}
         <div className="flex items-center justify-between p-6 border-b border-border sticky top-0 bg-card z-10">
           <h2 className="text-2xl font-bold text-foreground">
             {isEditMode ? 'Edit Fine' : 'Create New Fine'}
           </h2>
-          <button
-            onClick={onCancel}
-            className="p-2 hover:bg-accent rounded-lg transition"
-          >
+          <button onClick={onCancel} className="p-2 hover:bg-accent rounded-lg transition">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Form */}
+        {/* --- Form content --- */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Member Information */}
+
+          {/* --- Member Information --- */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-foreground">Member Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Member ID */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">
                   Member ID *
@@ -92,6 +95,7 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
                   placeholder="M001"
                 />
               </div>
+              {/* Member Name */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">
                   Member Name *
@@ -106,6 +110,7 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
                   placeholder="John Doe"
                 />
               </div>
+              {/* Member Email */}
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-foreground mb-1">
                   Member Email *
@@ -123,10 +128,11 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
             </div>
           </div>
 
-          {/* Book Information */}
+          {/* --- Book Information --- */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-foreground">Book Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Book ID */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">
                   Book ID *
@@ -141,6 +147,7 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
                   placeholder="B001"
                 />
               </div>
+              {/* Book Title */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">
                   Book Title *
@@ -158,10 +165,11 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
             </div>
           </div>
 
-          {/* Dates */}
+          {/* --- Dates --- */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-foreground">Borrow Dates</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Borrow Date */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">
                   Borrow Date *
@@ -175,6 +183,7 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
                   className="w-full px-3 py-2 bg-background border border-input rounded-lg focus:ring-2 focus:ring-ring"
                 />
               </div>
+              {/* Due Date */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">
                   Due Date *
@@ -188,6 +197,7 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
                   className="w-full px-3 py-2 bg-background border border-input rounded-lg focus:ring-2 focus:ring-ring"
                 />
               </div>
+              {/* Return Date */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">
                   Return Date
@@ -203,7 +213,7 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
             </div>
           </div>
 
-          {/* Fine Details */}
+          {/* --- Fine Details --- */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <Calculator className="w-5 h-5 text-primary" />
@@ -228,8 +238,9 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
             </div>
           </div>
 
-          {/* Status and Notes */}
+          {/* --- Status and Notes --- */}
           <div className="space-y-4">
+            {/* Status */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-1">
                 Status *
@@ -247,6 +258,7 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
                 <option value="overdue">Overdue</option>
               </select>
             </div>
+            {/* Notes */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-1">
                 Notes
@@ -262,8 +274,9 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
             </div>
           </div>
 
-          {/* Actions */}
+          {/* --- Actions --- */}
           <div className="flex justify-end space-x-3 pt-4 border-t border-border">
+            {/* Cancel Button */}
             <button
               type="button"
               onClick={onCancel}
@@ -272,6 +285,7 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
             >
               Cancel
             </button>
+            {/* Save/Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
@@ -281,6 +295,7 @@ export function FineForm({ fine, onSave, onCancel, isSubmitting = false }: FineF
               <span>{isSubmitting ? 'Saving...' : (isEditMode ? 'Update Fine' : 'Create Fine')}</span>
             </button>
           </div>
+
         </form>
       </div>
     </div>

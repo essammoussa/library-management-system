@@ -1,19 +1,32 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom"; // Hook to get current route info
 import { useEffect } from "react";
 
 const NotFound = () => {
-  const location = useLocation();
+  const location = useLocation(); // Get the current URL/path
 
+  // Log the 404 access attempt whenever the path changes
   useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
+    console.error(
+      "404 Error: User attempted to access non-existent route:",
+      location.pathname
+    );
   }, [location.pathname]);
 
   return (
+    // Full-screen container, center content both vertically and horizontally
     <div className="flex min-h-screen items-center justify-center bg-muted">
       <div className="text-center">
+        {/* 404 Title */}
         <h1 className="mb-4 text-4xl font-bold">404</h1>
+
+        {/* Message explaining the page is not found */}
         <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
+
+        {/* Link back to home page */}
+        <a
+          href="/"
+          className="text-primary underline hover:text-primary/90"
+        >
           Return to Home
         </a>
       </div>

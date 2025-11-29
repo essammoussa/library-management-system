@@ -5,28 +5,32 @@ import { Book, UserBookState, BorrowedBook, ReservedBook } from '@/types/book';
 import booksData from '@/data/books.json';
 
 export default function UserCatalog() {
-  // State
-  const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [availabilityFilter, setAvailabilityFilter] = useState('all');
-  const [userBooks, setUserBooks] = useState<UserBookState>({ borrowed: [], reserved: [] });
-  const [processingBookId, setProcessingBookId] = useState<string | null>(null);
+  // ------------------------------
+  // State variables
+  // ------------------------------
+  const [books, setBooks] = useState<Book[]>([]); // All books from the catalog
+  const [loading, setLoading] = useState(true); // Loading state for books
+  const [searchQuery, setSearchQuery] = useState(''); // Search input
+  const [selectedCategory, setSelectedCategory] = useState('all'); // Category filter
+  const [availabilityFilter, setAvailabilityFilter] = useState('all'); // Availability filter
+  const [userBooks, setUserBooks] = useState<UserBookState>({ borrowed: [], reserved: [] }); // User's borrowed/reserved books
+  const [processingBookId, setProcessingBookId] = useState<string | null>(null); // ID of book being processed (borrow/reserve)
 
   // Modal state
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-  const [actionType, setActionType] = useState<'borrow' | 'reserve' | null>(null);
-  const [notes, setNotes] = useState('');
-  const [userName, setUserName] = useState('');
-  const [quantity, setQuantity] = useState(1);
-  const [returnDate, setReturnDate] = useState('');
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null); // Book selected for action
+  const [actionType, setActionType] = useState<'borrow' | 'reserve' | null>(null); // Current modal action
+  const [notes, setNotes] = useState(''); // Notes input in modal
+  const [userName, setUserName] = useState(''); // User name input
+  const [quantity, setQuantity] = useState(1); // Quantity for borrowing
+  const [returnDate, setReturnDate] = useState(''); // Return date input
 
-  // Load books & user data
+  // ------------------------------
+  // Load books and user data
+  // ------------------------------
   useEffect(() => {
-    loadBooks();
-    loadUserBooks();
+    loadBooks(); // Load catalog books
+    loadUserBooks(); // Load borrowed/reserved books from localStorage
   }, []);
 
   const loadBooks = () => {
@@ -34,7 +38,7 @@ export default function UserCatalog() {
     setTimeout(() => {
       setBooks(booksData as Book[]);
       setLoading(false);
-    }, 800);
+    }, 800); // Simulate network delay
   };
 
   const loadUserBooks = () => {
@@ -43,13 +47,17 @@ export default function UserCatalog() {
     setUserBooks({ borrowed, reserved });
   };
 
-  // Categories
+  // ------------------------------
+  // Categories for filter dropdown
+  // ------------------------------
   const categories = useMemo(() => {
     const unique = Array.from(new Set(books.map(b => b.category)));
     return ['all', ...unique.sort()];
   }, [books]);
 
-  // Filtered books
+  // ------------------------------
+  // Filtered books based on search, category, availability
+  // ------------------------------
   const filteredBooks = useMemo(() => {
     return books.filter(book => {
       const matchesSearch =
@@ -60,11 +68,14 @@ export default function UserCatalog() {
         availabilityFilter === 'all' ||
         (availabilityFilter === 'available' && book.status === 'available') ||
         (availabilityFilter === 'unavailable' && book.status !== 'available');
+
       return matchesSearch && matchesCategory && matchesAvailability;
     });
   }, [books, searchQuery, selectedCategory, availabilityFilter]);
 
-  // Open modal
+  // ------------------------------
+  // Open modal for borrow/reserve
+  // ------------------------------
   const openActionDialog = (book: Book, type: 'borrow' | 'reserve') => {
     setSelectedBook(book);
     setActionType(type);
@@ -75,13 +86,19 @@ export default function UserCatalog() {
     setIsDialogOpen(true);
   };
 
-  // Check borrowed/reserved
+  // ------------------------------
+  // Check if user already borrowed/reserved a book
+  // ------------------------------
   const isBookBorrowed = (bookId: string) => userBooks.borrowed.some(b => b.bookId === bookId);
   const isBookReserved = (bookId: string) => userBooks.reserved.some(r => r.bookId === bookId);
 
-  // Borrow handler
+  // ------------------------------
+  // Borrow book handler
+  // ------------------------------
   const handleBorrow = () => {
     if (!selectedBook) return;
+
+    // Validate inputs
     if (!userName) { alert('Enter your name'); return; }
     if (!returnDate) { alert('Select return date'); return; }
     if (quantity < 1 || quantity > selectedBook.availableQuantity) {
@@ -95,6 +112,7 @@ export default function UserCatalog() {
 
     setProcessingBookId(selectedBook.id);
 
+    // Create borrowed book object
     const borrowedBook: BorrowedBook = {
       bookId: selectedBook.id,
       bookTitle: selectedBook.title,
@@ -105,11 +123,12 @@ export default function UserCatalog() {
       userName
     };
 
+    // Update user's borrowed books
     const updatedBorrowed = [...userBooks.borrowed, borrowedBook];
     localStorage.setItem('borrowedBooks', JSON.stringify(updatedBorrowed));
     setUserBooks(prev => ({ ...prev, borrowed: updatedBorrowed }));
 
-    // Update availability
+    // Update availability in catalog
     setBooks(prevBooks =>
       prevBooks.map(b =>
         b.id === selectedBook.id
@@ -123,7 +142,9 @@ export default function UserCatalog() {
     alert('Book borrowed successfully!');
   };
 
-  // Reserve handler
+  // ------------------------------
+  // Reserve book handler
+  // ------------------------------
   const handleReserve = () => {
     if (!selectedBook) return;
     if (!userName) { alert('Enter your name'); return; }
@@ -149,6 +170,9 @@ export default function UserCatalog() {
     alert('Book reserved successfully!');
   };
 
+  // ------------------------------
+  // Clear all filters
+  // ------------------------------
   const clearFilters = () => {
     setSearchQuery('');
     setSelectedCategory('all');
@@ -157,6 +181,9 @@ export default function UserCatalog() {
 
   const hasFilters = searchQuery || selectedCategory !== 'all' || availabilityFilter !== 'all';
 
+  // ------------------------------
+  // Render
+  // ------------------------------
   return (
     <div className="p-6 lg:p-8 space-y-6">
       {/* Header */}
@@ -167,6 +194,7 @@ export default function UserCatalog() {
 
       {/* Search & Filters */}
       <div className="bg-card border rounded-lg p-6 space-y-4">
+        {/* Search Input */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
           <input
@@ -177,6 +205,8 @@ export default function UserCatalog() {
             className="w-full pl-10 pr-4 py-3 bg-background border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent text-foreground placeholder:text-muted-foreground"
           />
         </div>
+
+        {/* Category & Availability Filters */}
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <label className="block text-sm font-medium mb-2">Category</label>
@@ -208,7 +238,7 @@ export default function UserCatalog() {
         </div>
       </div>
 
-      {/* Loading */}
+      {/* Loading State */}
       {loading && (
         <div className="flex flex-col items-center py-20">
           <Loader2 className="w-12 h-12 animate-spin text-primary mb-4" />
@@ -243,13 +273,14 @@ export default function UserCatalog() {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Modal for Borrow/Reserve */}
       {isDialogOpen && selectedBook && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-card p-6 rounded-lg w-full max-w-md space-y-4">
             <h2 className="text-xl font-bold">{actionType === 'borrow' ? 'Borrow' : 'Reserve'} Book</h2>
             <p>{selectedBook.title}</p>
 
+            {/* User Name Input */}
             <input
               type="text"
               placeholder="Your Name"
@@ -258,17 +289,18 @@ export default function UserCatalog() {
               className="w-full p-2 border rounded"
             />
 
+            {/* Borrow Inputs */}
             {actionType === 'borrow' && (
               <>
-               <label className="block text-sm mt-2">Quantity</label>
+                <label className="block text-sm mt-2">Quantity</label>
                 <input
-                type="number"
-                min={1}
-                max={selectedBook?.availableQuantity || 1}
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-                 className="w-full p-2 border rounded"
-              />
+                  type="number"
+                  min={1}
+                  max={selectedBook?.availableQuantity || 1}
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  className="w-full p-2 border rounded"
+                />
                 <label className="block text-sm mt-2">Return Date</label>
                 <input
                   type="date"
@@ -279,6 +311,7 @@ export default function UserCatalog() {
               </>
             )}
 
+            {/* Notes */}
             <textarea
               placeholder="Notes (optional)"
               value={notes}
@@ -286,6 +319,7 @@ export default function UserCatalog() {
               className="w-full p-2 border rounded"
             />
 
+            {/* Modal Actions */}
             <div className="flex justify-end gap-2 mt-4">
               <button className="px-4 py-2 bg-muted rounded" onClick={() => setIsDialogOpen(false)}>Cancel</button>
               <button
@@ -298,8 +332,6 @@ export default function UserCatalog() {
           </div>
         </div>
       )}
-
     </div>
   );
 }
-

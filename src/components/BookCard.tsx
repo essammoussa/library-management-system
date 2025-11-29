@@ -3,12 +3,12 @@ import { Book as BookIcon, User, Tag, CheckCircle, XCircle, Clock } from 'lucide
 import { Book } from '@/types/book';
 
 interface BookCardProps {
-  book: Book;
-  onBorrow: (bookId: string) => void;
-  onReserve: (bookId: string) => void;
-  isBorrowed: boolean;
-  isReserved: boolean;
-  isLoading?: boolean;
+  book: Book; // Book data
+  onBorrow: (bookId: string) => void; // Callback to borrow the book
+  onReserve: (bookId: string) => void; // Callback to reserve the book
+  isBorrowed: boolean; // If the current user has borrowed this book
+  isReserved: boolean; // If the current user has reserved this book
+  isLoading?: boolean; // Optional loading state
 }
 
 export function BookCard({ 
@@ -17,9 +17,10 @@ export function BookCard({
   onReserve, 
   isBorrowed, 
   isReserved,
-  isLoading = false 
+  isLoading = false // default false
 }: BookCardProps) {
   
+  // Determine button text, style, icon, and click behavior
   const getButtonContent = () => {
     if (isBorrowed) {
       return {
@@ -27,7 +28,7 @@ export function BookCard({
         className: 'bg-muted text-muted-foreground cursor-not-allowed',
         icon: <CheckCircle className="w-4 h-4" />,
         disabled: true,
-        onClick: () => {}
+        onClick: () => {} // disabled, no action
       };
     }
 
@@ -37,7 +38,7 @@ export function BookCard({
         className: 'bg-muted text-muted-foreground cursor-not-allowed',
         icon: <Clock className="w-4 h-4" />,
         disabled: true,
-        onClick: () => {}
+        onClick: () => {} // disabled, no action
       };
     }
 
@@ -47,29 +48,30 @@ export function BookCard({
         className: 'bg-secondary text-secondary-foreground hover:bg-secondary/90',
         icon: <BookIcon className="w-4 h-4" />,
         disabled: isLoading,
-        onClick: () => onBorrow(book.id)
+        onClick: () => onBorrow(book.id) // trigger borrow
       };
     }
 
+    // Book is not available but can be reserved
     return {
       text: 'Reserve Book',
       className: 'bg-primary text-primary-foreground hover:bg-primary/90',
       icon: <Clock className="w-4 h-4" />,
       disabled: isLoading,
-      onClick: () => onReserve(book.id)
+      onClick: () => onReserve(book.id) // trigger reserve
     };
   };
 
-  const button = getButtonContent();
+  const button = getButtonContent(); // current button config
 
   return (
     <div className="bg-card border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow group">
-      {/* Book Cover */}
+      {/* Book Cover / Icon */}
       <div className="bg-gradient-to-br from-primary/10 to-secondary/10 h-48 flex items-center justify-center group-hover:from-primary/20 group-hover:to-secondary/20 transition-colors">
         <BookIcon className="w-20 h-20 text-muted-foreground" />
       </div>
 
-      {/* Book Info */}
+      {/* Book Info Section */}
       <div className="p-5 space-y-3">
         {/* Title */}
         <div>
@@ -111,7 +113,7 @@ export function BookCard({
           )}
         </div>
 
-        {/* Description (if exists) */}
+        {/* Description (optional) */}
         {book.description && (
           <p className="text-sm text-muted-foreground line-clamp-2 pt-2 border-t border-border">
             {book.description}
