@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { RotateCcw, ArrowUpDown } from "lucide-react";
+import { RotateCcw, ArrowUpDown ,Loader2} from "lucide-react";
 
 interface BorrowListProps {
   borrowRecords: BorrowRecord[]; // List of borrow records
@@ -222,7 +222,8 @@ export function BorrowList({
   // --- Show loading state if needed ---
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex flex-col items-center justify-center py-20">
+        <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
         <p className="text-muted-foreground">Loading borrow records...</p>
       </div>
     );

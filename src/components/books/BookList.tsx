@@ -20,7 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Search, Pencil, Trash2, Eye } from "lucide-react";
+import { MoreHorizontal, Search, Pencil, Trash2, Eye , Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -213,7 +213,8 @@ export const BookList = ({
             Data table or loading state
         -------------------------- */}
         {isLoading ? (
-          <div className="flex items-center justify-center h-64">
+         <div className="flex flex-col items-center justify-center py-20">
+        <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
             <p className="text-muted-foreground">Loading books...</p>
           </div>
         ) : (

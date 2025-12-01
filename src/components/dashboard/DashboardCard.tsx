@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LucideIcon } from "lucide-react";
+import { LucideIcon  } from "lucide-react";
+import { useState } from "react";
 
 interface DashboardCardProps {
   title: string;
@@ -10,11 +11,14 @@ interface DashboardCardProps {
   trend?: {
     value: number;
     isPositive: boolean;
+    loading?: boolean;
   };
 }
 
+
 export function DashboardCard({ title, value, description, icon: Icon, trend }: DashboardCardProps) {
   return (
+    
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>

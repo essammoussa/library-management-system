@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Pencil, Trash2, ArrowUpDown } from "lucide-react";
+import { Eye, Pencil, Trash2, ArrowUpDown , Loader2 } from "lucide-react";
 
 // Props for the MemberList component
 interface MemberListProps {
@@ -174,7 +174,8 @@ export function MemberList({
   // Show loading state if data is not ready
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex flex-col items-center justify-center py-20">
+        <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
         <p className="text-muted-foreground">Loading members...</p>
       </div>
     );

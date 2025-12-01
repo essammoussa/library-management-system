@@ -1,4 +1,4 @@
-import { BookOpen, Users, BookCheck, AlertTriangle, Clock } from "lucide-react";
+import { BookOpen, Users, BookCheck, AlertTriangle, Clock ,Loader2 } from "lucide-react";
 import { DashboardCard } from "@/components/dashboard/DashboardCard";
 import { ChartContainer } from "@/components/dashboard/ChartContainer";
 import { ActivityItem } from "@/components/dashboard/ActivityItem";
@@ -6,6 +6,8 @@ import { BorrowingTrendsChart } from "@/components/dashboard/BorrowingTrendsChar
 import { TopCategoriesChart } from "@/components/dashboard/TopCategoriesChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { useEffect } from "react";
 
 // --- Dummy data for dashboard statistics ---
 const stats = {
@@ -14,6 +16,7 @@ const stats = {
   borrowedToday: { value: 23, trend: { value: 5, isPositive: false } },
   overdueBooks: { value: 18, trend: { value: 3, isPositive: false } },
   pendingReservations: { value: 12, trend: { value: 15, isPositive: true } },
+  
 };
 
 // --- Dummy data for most borrowed books ---
@@ -65,7 +68,27 @@ const recentActivities = [
 ];
 
 const Dashboard = () => {
+    
+  
+    const [loading, setLoading] = useState(true);
+
+  // Simulate loading (replace with real API request later)
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // --- Loading UI ---
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20">
+        <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+        <p className="text-muted-foreground">Loading dashboard...</p>
+      </div>
+    );
+  }
   return (
+    
     <div className="space-y-6">
       {/* Header Section */}
       <div>
@@ -73,8 +96,10 @@ const Dashboard = () => {
         <p className="text-muted-foreground mt-2">
           Welcome to the library management system
         </p>
-      </div>
+      </div> 
+      
 
+    
       {/* --- Stats Grid --- */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         {/* Each DashboardCard displays a key statistic with trend indicator */}
