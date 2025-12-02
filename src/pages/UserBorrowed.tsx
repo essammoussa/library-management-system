@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import UserBookCard from '@/components/UserBookCard';
+import UserBookCard from '@/components/books/UserBookCard';
 import { UserBookState } from '@/types/book';
 
 export default function MyBooks() {

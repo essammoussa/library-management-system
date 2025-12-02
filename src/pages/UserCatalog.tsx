@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Search, Filter, Loader2, BookOpen, X } from 'lucide-react';
-import { BookCard } from '@/components/BookCard';
+import { BookCard } from '@/components/books/BookCard';
 import { Book, UserBookState, BorrowedBook, ReservedBook } from '@/types/book';
 import booksData from '@/data/books.json';
 
