@@ -275,6 +275,75 @@ export default function UserCatalog() {
           ))}
         </div>
       )}
+      {/* Modal for Borrow/Reserve */}
+{isDialogOpen && selectedBook && (
+  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    <div className="bg-card p-6 rounded-lg w-full max-w-md space-y-4">
+      <h2 className="text-xl font-bold">
+        {actionType === "borrow" ? "Borrow" : "Reserve"} Book
+      </h2>
+      <p className="font-medium">{selectedBook.title}</p>
+
+      {/* User Name */}
+      <input
+        type="text"
+        placeholder="Your Name"
+        value={userName}
+        onChange={(e) => setUserName(e.target.value)}
+        className="w-full p-2 border rounded"
+      />
+
+      {/* Borrow Only Inputs */}
+      {actionType === "borrow" && (
+        <>
+          <label className="block text-sm mt-2">Quantity</label>
+          <input
+            type="number"
+            min={1}
+            max={selectedBook.availableQuantity}
+            value={quantity}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+            className="w-full p-2 border rounded"
+          />
+
+          <label className="block text-sm mt-2">Return Date</label>
+          <input
+            type="date"
+            value={returnDate}
+            onChange={(e) => setReturnDate(e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+        </>
+      )}
+
+      {/* Notes */}
+      <textarea
+        placeholder="Notes (optional)"
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+        className="w-full p-2 border rounded"
+      />
+
+      {/* Actions */}
+      <div className="flex justify-end gap-2 mt-4">
+        <button
+          className="px-4 py-2 bg-muted rounded"
+          onClick={() => setIsDialogOpen(false)}
+        >
+          Cancel
+        </button>
+
+        <button
+          className="px-4 py-2 bg-primary text-white rounded"
+          onClick={actionType === "borrow" ? handleBorrow : handleReserve}
+        >
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }
