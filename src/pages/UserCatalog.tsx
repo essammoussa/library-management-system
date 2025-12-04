@@ -320,7 +320,7 @@ export default function UserCatalog() {
               </button>
 
               <button
-                className="px-4 py-2 bg-blue-600 text-white rounded"
+                className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 text-white rounded"
                 onClick={
                   actionType === "borrow" ? handleBorrow : handleReserve
                 }

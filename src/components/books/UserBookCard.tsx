@@ -6,8 +6,7 @@ interface Props {
     bookId: string;       // Unique ID of the book
     bookTitle: string;    // Title of the book
     borrowDate: string;   // Date the book was borrowed
-    dueDate: string;      // Date the book is due
-    quantity: number;     // Number of copies borrowed
+    dueDate: string;      // Date the book is due     
   };
   onReturn?: (bookId: string) => void; // Optional callback for returning the book
 }
@@ -34,9 +33,6 @@ export const UserBookCard: React.FC<Props> = ({ book, onReturn }) => {
       {/* Borrow and Due Dates */}
       <p>Borrowed: {new Date(book.borrowDate).toLocaleDateString()}</p>
       <p>Due: {new Date(book.dueDate).toLocaleDateString()}</p>
-
-      {/* Quantity borrowed */}
-      <p>Quantity: {book.quantity}</p>
 
       {/* Overdue info */}
       {overdueDays > 0 && (
