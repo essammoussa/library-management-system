@@ -19,7 +19,6 @@ export interface BorrowedBook {
   bookTitle: string;       
   borrowDate: string;
   dueDate: string;
-  quantity: number;   
   notes?: string;      
 }
 
@@ -28,7 +27,6 @@ export interface ReservedBook {
   bookTitle: string;       
   reserverName: string;
   reservationDate: string;
-  quantity: number;
   notes?: string;
 }
 
