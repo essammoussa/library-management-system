@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRole } from '@/store/RoleContext';
+import axiosClient from '@/lib/axiosClient';
 import { BookOpen } from 'lucide-react';
 
 type Role = 'admin' | 'member';
@@ -8,10 +9,11 @@ type Role = 'admin' | 'member';
 interface User {
   email: string;
   password: string;
+  name?: string;
   role: Role;
 }
 
-const ADMIN_EMAIL = "superadmin@library.com";
+const ADMIN_EMAIL = 'superadmin@library.com';
 
 export default function Login() {
   const { login } = useRole();
@@ -23,12 +25,12 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  //  Get all users
+  //  Get all users (fallback for local storage)
   const getUsers = (): User[] => {
     return JSON.parse(localStorage.getItem('users') || '[]');
   };
 
-  //  Save user
+  //  Save user (local storage)
   const saveUser = (user: User) => {
     const users = getUsers();
     users.push(user);
@@ -36,38 +38,44 @@ export default function Login() {
   };
 
   //  REGISTER (AUTO MEMBER, EXCEPT SECRET ADMIN EMAIL)
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!email || !password) {
       setError('All fields are required');
       return;
     }
 
-    const users = getUsers();
-
-    //  Email must be unique
-    if (users.find(u => u.email === email)) {
-      setError('Email already exists');
-      return;
-    }
-
-    //  Prevent registering admin unless it's the secret email
-    let role: Role = 'member';
-
-    if (email === ADMIN_EMAIL) {
-      if (users.find(u => u.role === 'admin')) {
-        setError('Admin already exists');
-        return;
-      }
-      role = 'admin';
-    }
-
-    saveUser({ email, password, role });
-
-    alert('✅ Registration successful! You can now login.');
-    setIsRegister(false);
-    setEmail('');
-    setPassword('');
+    setLoading(true);
     setError('');
+
+    try {
+      // Determine role based on email
+      let role: Role = 'member';
+      if (email === ADMIN_EMAIL) {
+        role = 'admin';
+      }
+
+      // Call backend registration
+      const response = await axiosClient.post('/auth/register', {
+        email,
+        password,
+        name: email.split('@')[0],
+        role,
+      });
+
+      if (response.status === 201) {
+        alert('✅ Registration successful! You can now login.');
+        setIsRegister(false);
+        setEmail('');
+        setPassword('');
+        setError('');
+      }
+    } catch (err: any) {
+      setError(
+        err.response?.data?.message || 'Registration failed. Please try again.'
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   // LOGIN
@@ -80,33 +88,38 @@ export default function Login() {
     setLoading(true);
     setError('');
 
-    const users = getUsers();
-    const user = users.find(
-      u => u.email === email && u.password === password
-    );
+    try {
+      // Call backend login
+      const response = await axiosClient.post('/auth/login', {
+        email,
+        password,
+      });
 
-    setTimeout(() => {
-      if (!user) {
-        setError('Invalid email or password');
-        setLoading(false);
-        return;
-      }
+      const { token, user } = response.data;
 
+      // Store token and user data
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      // Update role context
       login(user.role, {
         email: user.email,
-        name: user.email.split('@')[0],
+        name: user.name,
         role: user.role,
       });
 
-      setLoading(false);
+      // Route based on role
       navigate(user.role === 'admin' ? '/' : '/user/catalog');
-    }, 500);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Invalid email or password');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="bg-card rounded-lg shadow-xl p-8 w-full max-w-md border border-border">
-
         {/* Header */}
         <div className="text-center mb-8">
           <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -128,14 +141,13 @@ export default function Login() {
         )}
 
         <div className="space-y-4">
-
           {/* Email */}
           <input
             type="email"
             className="w-full px-4 py-2 border rounded-lg"
             placeholder="Email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           {/* Password */}
@@ -144,7 +156,7 @@ export default function Login() {
             className="w-full px-4 py-2 border rounded-lg"
             placeholder="Password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
 
           {/* Buttons */}
@@ -177,7 +189,6 @@ export default function Login() {
               ? 'Already have an account? Login'
               : 'Don’t have an account? Register'}
           </button>
-
         </div>
       </div>
     </div>

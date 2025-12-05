@@ -1,6 +1,5 @@
 [
   {
-    "id": "F001",
     "memberId": "M001",
     "memberName": "John Doe",
     "memberEmail": "john.doe@example.com",
@@ -17,7 +16,6 @@
     "notes": "Payment received via credit card"
   },
   {
-    "id": "F002",
     "memberId": "M002",
     "memberName": "Jane Smith",
     "memberEmail": "jane.smith@example.com",
@@ -31,7 +29,6 @@
     "createdAt": "2024-11-28T00:00:00Z"
   },
   {
-    "id": "F003",
     "memberId": "M003",
     "memberName": "Bob Johnson",
     "memberEmail": "bob.johnson@example.com",
@@ -43,13 +40,9 @@
     "daysOverdue": 5,
     "fineAmount": 5.0,
     "status": "waived",
-    "createdAt": "2024-11-08T16:45:00Z",
-    "waivedAt": "2024-11-10T10:00:00Z",
-    "waivedBy": "admin",
-    "waiverReason": "First-time offender, good standing member"
+    "createdAt": "2024-11-08T16:45:00Z"
   },
   {
-    "id": "F004",
     "memberId": "M004",
     "memberName": "Alice Williams",
     "memberEmail": "alice.williams@example.com",
@@ -60,11 +53,9 @@
     "daysOverdue": 35,
     "fineAmount": 35.0,
     "status": "overdue",
-    "createdAt": "2024-10-25T00:00:00Z",
-    "notes": "Multiple reminder emails sent. No response from member."
+    "createdAt": "2024-10-25T00:00:00Z"
   },
   {
-    "id": "F005",
     "memberId": "M001",
     "memberName": "John Doe",
     "memberEmail": "john.doe@example.com",
@@ -78,7 +69,6 @@
     "createdAt": "2024-11-28T00:00:00Z"
   },
   {
-    "id": "F006",
     "memberId": "M005",
     "memberName": "Charlie Brown",
     "memberEmail": "charlie.brown@example.com",
@@ -91,11 +81,9 @@
     "fineAmount": 6.0,
     "status": "paid",
     "createdAt": "2024-11-25T11:20:00Z",
-    "paidAt": "2024-11-25T11:25:00Z",
-    "notes": "Paid immediately upon return"
+    "paidAt": "2024-11-25T11:25:00Z"
   },
   {
-    "id": "F007",
     "memberId": "M006",
     "memberName": "Diana Prince",
     "memberEmail": "diana.prince@example.com",
@@ -109,7 +97,6 @@
     "createdAt": "2024-11-28T00:00:00Z"
   },
   {
-    "id": "F008",
     "memberId": "M002",
     "memberName": "Jane Smith",
     "memberEmail": "jane.smith@example.com",
