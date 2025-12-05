@@ -1,5 +1,6 @@
 [
   {
+    "id": "1",
     "title": "The Great Gatsby",
     "author": "F. Scott Fitzgerald",
     "isbn": "978-0743273565",
@@ -10,6 +11,7 @@
     "availableQuantity": 2
   },
   {
+      "id": "2",
     "title": "To Kill a Mockingbird",
     "author": "Harper Lee",
     "isbn": "978-0061120084",
@@ -20,6 +22,7 @@
     "availableQuantity": 0
   },
   {
+      "id": "3",
     "title": "1984",
     "author": "George Orwell",
     "isbn": "978-0451524935",
@@ -30,6 +33,7 @@
     "availableQuantity": 3
   },
   {
+      "id": "4",
     "title": "Pride and Prejudice",
     "author": "Jane Austen",
     "isbn": "978-0141439518",
@@ -40,6 +44,7 @@
     "availableQuantity": 1
   },
   {
+    "id": "5",
     "title": "The Catcher in the Rye",
     "author": "J.D. Salinger",
     "isbn": "978-0316769174",
@@ -50,6 +55,7 @@
     "availableQuantity": 3
   },
   {
+    "id": "6",
     "title": "Brave New World",
     "author": "Aldous Huxley",
     "isbn": "978-0060850524",
@@ -60,6 +66,7 @@
     "availableQuantity": 2
   },
   {
+    "id": "7",
     "title": "The Hobbit",
     "author": "J.R.R. Tolkien",
     "isbn": "978-0547928227",
@@ -70,6 +77,7 @@
     "availableQuantity": 2
   },
   {
+    "id": "8",
     "title": "Harry Potter and the Philosopher's Stone",
     "author": "J.K. Rowling",
     "isbn": "978-0439708180",
@@ -80,6 +88,7 @@
     "availableQuantity": 4
   },
   {
+    "id": "9",
     "title": "The Lord of the Rings",
     "author": "J.R.R. Tolkien",
     "isbn": "978-0544003415",
@@ -90,6 +99,7 @@
     "availableQuantity": 1
   },
   {
+    "id": "10",
     "title": "Animal Farm",
     "author": "George Orwell",
     "isbn": "978-0451526342",
@@ -99,7 +109,8 @@
     "totalCopies": 4,
     "availableQuantity": 4
   },
-  {
+  { 
+    "id": "11",
     "title": "The Chronicles of Narnia",
     "author": "C.S. Lewis",
     "isbn": "978-0066238500",
@@ -109,7 +120,8 @@
     "quantity": 3,
     "availableQuantity": 2
   },
-  {
+  { 
+    "id": "12",
     "title": "Moby-Dick",
     "author": "Herman Melville",
     "isbn": "978-0142437247",
@@ -119,7 +131,8 @@
     "totalCopies": 2,
     "availableQuantity": 2
   },
-  {
+  { 
+    "id": "13",
     "title": "The Alchemist",
     "author": "Paulo Coelho",
     "isbn": "978-0062315007",
@@ -129,7 +142,8 @@
     "totalCopies": 4,
     "availableQuantity": 1
   },
-  {
+  { 
+    "id": "14",
     "title": "Jane Eyre",
     "author": "Charlotte Brontë",
     "isbn": "978-0141441146",
@@ -140,6 +154,7 @@
     "availableQuantity": 2
   },
   {
+    "id": "15",
     "title": "Wuthering Heights",
     "author": "Emily Brontë",
     "isbn": "978-0141439556",

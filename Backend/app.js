@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 // Routes
-app.use('/auth', authRouter);
+app.use('/api/auth', authRouter);
 
 app.use('/api/v1/books', bookRouter);
 app.use('/api/v1/borrow', borrowRouter);

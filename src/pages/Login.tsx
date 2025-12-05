@@ -163,9 +163,10 @@ export default function Login() {
           {isRegister ? (
             <button
               onClick={handleRegister}
+              disabled={loading}
               className="w-full bg-primary text-white py-3 rounded-lg"
             >
-              Register
+              {loading ? 'Loading...' : 'Register'}
             </button>
           ) : (
             <button

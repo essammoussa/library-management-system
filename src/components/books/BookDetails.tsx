@@ -75,7 +75,7 @@ export const BookDetails = ({ book }: BookDetailsProps) => {
           <p className="font-medium text-lg">
             {book.availableQuantity} of {book.quantity}
           </p>
-
+          
           {/* Show warning if no copies are available */}
           {book.availableQuantity === 0 && (
             <p className="text-sm text-destructive mt-1">

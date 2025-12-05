@@ -4,8 +4,8 @@ import axios from 'axios';
 // baseURL is read from .env file (VITE_API_BASE_URL)
 const axiosClient = axios.create({
   baseURL:
-    (import.meta.env.VITE_API_BASE_URL as string) ||
-    'http://localhost:8080/api',
+  (import.meta.env.VITE_API_BASE_URL as string) ||
+  'http://localhost:8080',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
