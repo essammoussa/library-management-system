@@ -9,6 +9,7 @@ export interface BorrowRecord {
   borrowDate: string;
   dueDate: string;
   returnDate: string | null;
+  image?: string; // Optional field for book cover image URL
   status: "active" | "returned" | "overdue";
   fine: number;
 }

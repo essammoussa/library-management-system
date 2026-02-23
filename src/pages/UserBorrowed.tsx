@@ -1,74 +1,90 @@
-import React, { useState, useEffect } from 'react';
-import UserBookCard from '@/components/books/UserBookCard';
-import { UserBookState } from '@/types/book';
+import { useEffect, useState } from "react";
+import { BorrowedBook, Book } from "@/data/books"; // Updated import
+import booksData from "@/data/books.json";
+import { Button } from "@/components/ui/button";
 
-export default function MyBooks() {
-  // State to store user's borrowed and reserved books
-  const [userBooks, setUserBooks] = useState<UserBookState>({
-    borrowed: [],
-    reserved: []
-  });
+const BorrowedBooks = () => {
+  const [borrowedBooks, setBorrowedBooks] = useState<BorrowedBook[]>([]);
+  const [allBooks, setAllBooks] = useState<Book[]>([]);
 
-  // Load borrowed and reserved books from localStorage on component mount
   useEffect(() => {
-    const borrowed = JSON.parse(localStorage.getItem('borrowedBooks') || '[]'); // Get borrowed books
-    const reserved = JSON.parse(localStorage.getItem('reservedBooks') || '[]'); // Get reserved books
-
-    const DAILY_RATE = 1; // $1 per day fine for overdue books
-
-    // Calculate overdue days and fine for each borrowed book
-    const updatedBorrowed = borrowed.map((b: any) => {
-      const today = new Date();
-      const due = new Date(b.dueDate);
-
-      // Calculate number of overdue days
-      const overdueDays = Math.max(
-        Math.floor((today.getTime() - due.getTime()) / (1000 * 60 * 60 * 24)),
-        0 // Ensure no negative days
-      );
-
-      return {
-        ...b,
-        overdueDays,
-        fineAmount: overdueDays * DAILY_RATE // Calculate fine
-      };
-    });
-
-    // Update state with borrowed and reserved books
-    setUserBooks({ borrowed: updatedBorrowed, reserved });
+    setAllBooks(booksData as Book[]);
+    const borrowed = JSON.parse(localStorage.getItem("borrowedBooks") || "[]");
+    setBorrowedBooks(borrowed);
   }, []);
 
-  // Function to handle returning a book
   const handleReturn = (bookId: string) => {
-    // Remove the returned book from borrowed list
-    const updatedBorrowed = userBooks.borrowed.filter(b => b.bookId !== bookId);
+    if (!confirm("Are you sure you want to return this book?")) return;
 
-    // Update localStorage
-    localStorage.setItem('borrowedBooks', JSON.stringify(updatedBorrowed));
+    const updated = borrowedBooks.filter((b) => b.bookId !== bookId);
+    setBorrowedBooks(updated);
+    localStorage.setItem("borrowedBooks", JSON.stringify(updated));
 
-    // Update state
-    setUserBooks(prev => ({ ...prev, borrowed: updatedBorrowed }));
-
-    // Notify user
-    alert('Book returned successfully!');
+    // Restore book quantity
+    setAllBooks((prev) =>
+      prev.map((b) =>
+        b.id === bookId ? { ...b, availableQuantity: b.availableQuantity + 1 } : b
+      )
+    );
   };
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold">My Books</h1>
+      <h1 className="text-3xl font-bold">My Borrowed Books</h1>
 
-      {/* If no borrowed books, show a message */}
-      {userBooks.borrowed.length === 0 ? (
-        <p>You have no borrowed books.</p>
+      {borrowedBooks.length === 0 ? (
+        <p className="text-muted-foreground">You haven't borrowed any books yet.</p>
       ) : (
-        // Display borrowed books in a responsive grid
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {userBooks.borrowed.map(book => (
-            // Each book rendered using UserBookCard component
-            <UserBookCard key={book.bookId} book={book} onReturn={handleReturn} />
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {borrowedBooks.map((b) => {
+            const bookInfo = allBooks.find((book) => book.id === b.bookId);
+            if (!bookInfo) return null;
+
+            return (
+              <div
+                key={b.bookId}
+                className="border rounded-lg shadow-md overflow-hidden bg-white hover:shadow-lg transition-shadow"
+              >
+                {/* Book image */}
+                <img
+                  src={bookInfo.image || "/placeholder.jpg"}
+                  alt={bookInfo.title}
+                  className="h-48 w-full object-cover rounded-t-lg"
+                />
+
+                {/* Book details */}
+                <div className="p-4 space-y-2">
+                  <h2 className="text-lg font-semibold">{bookInfo.title}</h2>
+                  <p className="text-sm text-muted-foreground">{bookInfo.author}</p>
+
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <span className="bg-primary text-white px-2 py-1 rounded text-xs">
+                      Borrowed: {new Date(b.borrowDate).toLocaleDateString()}
+                    </span>
+                    <span className="bg-red-500 text-white px-2 py-1 rounded text-xs">
+                      Due: {new Date(b.dueDate).toLocaleDateString()}
+                    </span>
+                  </div>
+
+                  {b.notes && (
+                    <p className="text-sm text-gray-600">Notes: {b.notes}</p>
+                  )}
+
+                  <Button
+                    variant="destructive"
+                    className="mt-3 w-full"
+                    onClick={() => handleReturn(b.bookId)}
+                  >
+                    Return Book
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
   );
-}
+};
+
+export default BorrowedBooks;

@@ -6,6 +6,7 @@
     "isbn": "978-0743273565",
     "category": "Fiction",
     "status": "available",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/81af+MCATTL.jpg",
     "publishYear": 1925,
     "quantity": 3,
     "availableQuantity": 2
@@ -17,6 +18,7 @@
     "isbn": "978-0061120084",
     "category": "Fiction",
     "status": "borrowed",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/81q+YVpKUqL.jpg",
     "publishYear": 1960,
     "quantity": 2,
     "availableQuantity": 0
@@ -28,6 +30,7 @@
     "isbn": "978-0451524935",
     "category": "Science Fiction",
     "status": "available",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "publishYear": 1949,
     "quantity": 4,
     "availableQuantity": 3
@@ -39,6 +42,7 @@
     "isbn": "978-0141439518",
     "category": "Classic",
     "status": "reserved",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "publishYear": 1813,
     "quantity": 2,
     "availableQuantity": 1
@@ -50,6 +54,7 @@
     "isbn": "978-0316769174",
     "category": "Fiction",
     "status": "available",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "publishYear": 1951,
     "quantity": 3,
     "availableQuantity": 3
@@ -61,6 +66,7 @@
     "isbn": "978-0060850524",
     "category": "Science Fiction",
     "status": "available",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "publishYear": 1932,
     "quantity": 2,
     "availableQuantity": 2
@@ -72,6 +78,7 @@
     "isbn": "978-0547928227",
     "category": "Fantasy",
     "status": "borrowed",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "publishYear": 1937,
     "quantity": 5,
     "availableQuantity": 2
@@ -83,6 +90,7 @@
     "isbn": "978-0439708180",
     "category": "Fantasy",
     "status": "available",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "publishYear": 1997,
     "quantity": 6,
     "availableQuantity": 4
@@ -94,6 +102,7 @@
     "isbn": "978-0544003415",
     "category": "Fantasy",
     "status": "reserved",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "publishYear": 1954,
     "quantity": 3,
     "availableQuantity": 1
@@ -104,7 +113,8 @@
     "author": "George Orwell",
     "isbn": "978-0451526342",
     "category": "Fiction",
-    "status": "available",
+    "status": "unavailable",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "publishYear": 1945,
     "quantity": 4,
     "availableQuantity": 4
@@ -116,6 +126,7 @@
     "isbn": "978-0066238500",
     "category": "Fantasy",
     "status": "available",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "publishYear": 1950,
     "quantity": 3,
     "availableQuantity": 2
@@ -127,6 +138,7 @@
     "isbn": "978-0142437247",
     "category": "Classic",
     "status": "available",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "publishYear": 1851,
     "quantity": 2,
     "availableQuantity": 2
@@ -137,7 +149,8 @@
     "author": "Paulo Coelho",
     "isbn": "978-0062315007",
     "category": "Fiction",
-    "status": "borrowed",
+    "status": "available",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "publishYear": 1988,
     "quantity": 4,
     "availableQuantity": 1
@@ -149,6 +162,7 @@
     "isbn": "978-0141441146",
     "category": "Classic",
     "status": "available",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "publishYear": 1847,
     "quantity": 2,
     "availableQuantity": 2
@@ -160,6 +174,7 @@
     "isbn": "978-0141439556",
     "category": "Classic",
     "status": "available",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "publishYear": 1847,
     "quantity": 2,
     "availableQuantity": 1

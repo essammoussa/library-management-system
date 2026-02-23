@@ -9,6 +9,7 @@
     "dueDate": "2024-02-15",
     "returnDate": null,
     "status": "active",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/81q+YVpKUqL.jpg",
     "fine": 0
   },
   {
@@ -21,6 +22,7 @@
     "dueDate": "2024-02-10",
     "returnDate": "2024-02-08",
     "status": "returned",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/81q+YVpKUqL.jpg",
     "fine": 0
   },
   {
@@ -33,6 +35,7 @@
     "dueDate": "2024-02-05",
     "returnDate": null,
     "status": "overdue",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "fine": 5.5
   },
   {
@@ -45,6 +48,7 @@
     "dueDate": "2024-02-20",
     "returnDate": null,
     "status": "active",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "fine": 0
   },
   {
@@ -57,6 +61,7 @@
     "dueDate": "2024-02-18",
     "returnDate": null,
     "status": "active",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/81af+MCATTL.jpg",
     "fine": 0
   },
   {
@@ -69,6 +74,7 @@
     "dueDate": "2024-02-22",
     "returnDate": null,
     "status": "active",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "fine": 0
   },
   {
@@ -81,6 +87,7 @@
     "dueDate": "2024-02-25",
     "returnDate": null,
     "status": "active",
+      "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "fine": 0
   },
   {
@@ -93,6 +100,7 @@
     "dueDate": "2024-02-12",
     "returnDate": null,
     "status": "active",
+      "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "fine": 0
   },
   {
@@ -105,6 +113,7 @@
     "dueDate": "2024-02-08",
     "returnDate": "2024-02-07",
     "status": "returned",
+      "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "fine": 0
   },
   {
@@ -117,6 +126,7 @@
     "dueDate": "2024-02-28",
     "returnDate": null,
     "status": "active",
+      "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "fine": 0
   },
   {
@@ -128,7 +138,8 @@
     "borrowDate": "2023-12-20",
     "dueDate": "2024-01-20",
     "returnDate": "2024-01-18",
-    "status": "returned",
+    "status": "returned",  
+    "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "fine": 0
   },
   {
@@ -141,6 +152,7 @@
     "dueDate": "2024-02-16",
     "returnDate": null,
     "status": "active",
+      "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "fine": 0
   },
   {
@@ -153,6 +165,7 @@
     "dueDate": "2024-01-15",
     "returnDate": null,
     "status": "overdue",
+      "image": "https://images-na.ssl-images-amazon.com/images/I/41yJ75GPVrL.jpg",
     "fine": 3.0
   }
 ]

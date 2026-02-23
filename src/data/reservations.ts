@@ -8,6 +8,7 @@ export interface Reservation {
   memberName: string;
   reservationDate: string;
   expiryDate: string;
+  image?: string; // Optional field for book cover image URL
   status: "active" | "fulfilled" | "expired" | "cancelled";
   priority: number;
 }

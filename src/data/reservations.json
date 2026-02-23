@@ -8,6 +8,7 @@
     "reservationDate": "2024-01-20",
     "expiryDate": "2024-02-20",
     "status": "active",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/81q+YVpKUqL.jpg",
     "priority": 1
   },
   {
@@ -19,6 +20,7 @@
     "reservationDate": "2024-01-18",
     "expiryDate": "2024-02-18",
     "status": "active",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/81q+YVpKUqL.jpg",
     "priority": 1
   },
   {
@@ -30,6 +32,7 @@
     "reservationDate": "2024-01-22",
     "expiryDate": "2024-02-22",
     "status": "active",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/81q+YVpKUqL.jpg",
     "priority": 2
   },
   {
@@ -41,6 +44,7 @@
     "reservationDate": "2024-01-10",
     "expiryDate": "2024-02-10",
     "status": "fulfilled",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/81q+YVpKUqL.jpg",
     "priority": 1
   },
   {
@@ -52,6 +56,7 @@
     "reservationDate": "2024-01-05",
     "expiryDate": "2024-02-05",
     "status": "expired",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/81q+YVpKUqL.jpg",
     "priority": 1
   },
   {
