@@ -18,6 +18,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"; // Dialog components
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Plus } from "lucide-react"; // Icon
 import { toast } from "@/hooks/use-toast"; // Toast notifications
 
@@ -33,6 +43,10 @@ const Members = () => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false); // Member details modal
   const [selectedMember, setSelectedMember] = useState<Member | null>(null); // For details view
   const [editingMember, setEditingMember] = useState<Member | null>(null); // For editing existing member
+
+  // AlertDialog state for deletion
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [memberToDelete, setMemberToDelete] = useState<string | null>(null);
 
   // Fetch members on component mount
   useEffect(() => {
@@ -70,13 +84,28 @@ const Members = () => {
   };
 
   // Delete a member with confirmation
-  const handleDeleteMember = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this member?")) {
-      await dispatch(deleteMember(id));
+  const handleDeleteMember = (id: string) => {
+    setMemberToDelete(id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteMember = async () => {
+    if (!memberToDelete) return;
+    try {
+      await dispatch(deleteMember(memberToDelete));
       toast({
         title: "Success",
         description: "Member deleted successfully",
       });
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Failed to delete member",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setMemberToDelete(null);
     }
   };
 
@@ -111,13 +140,13 @@ const Members = () => {
   return (
     <div className="space-y-6">
       {/* Header with title and Add Member button */}
-      <div className="flex items-center justify-between">
+      <div className="mb-10 flex items-end justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Members</h1>
-          <p className="text-muted-foreground">Manage library members</p>
+          <h1 className="text-5xl font-extrabold text-foreground tracking-tighter mb-2">Member <span className="text-primary italic">Directory</span></h1>
+          <p className="text-lg text-muted-foreground/60">Manage library memberships and community access.</p>
         </div>
-        <Button onClick={handleAddMember}>
-          <Plus className="mr-2 h-4 w-4" />
+        <Button onClick={handleAddMember} className="rounded-2xl px-6 h-12 font-bold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all">
+          <Plus className="mr-2 h-5 w-5" />
           Add Member
         </Button>
       </div>
@@ -156,6 +185,25 @@ const Members = () => {
           {selectedMember && <MemberDetails member={selectedMember} />}
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the member
+              and their history.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteMember} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

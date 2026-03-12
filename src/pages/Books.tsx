@@ -16,6 +16,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Plus } from "lucide-react";
 import { Book } from "@/data/books";
 import { useToast } from "@/hooks/use-toast";
@@ -30,6 +40,10 @@ const Books = () => {
   // Local state for controlling dialog and editing book
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingBook, setEditingBook] = useState<Book | undefined>(undefined);
+
+  // AlertDialog state for deletion
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [bookToDelete, setBookToDelete] = useState<string | null>(null);
 
   // Fetch books and categories when component mounts
   useEffect(() => {
@@ -61,21 +75,28 @@ const Books = () => {
   };
 
   // Delete a book after confirming with the user
-  const handleDeleteBook = async (id: string) => {
-    if (confirm("Are you sure you want to delete this book?")) {
-      try {
-        await dispatch(deleteBook(id)).unwrap(); // Call deleteBook action
-        toast({
-          title: "Success",
-          description: "Book deleted successfully",
-        });
-      } catch (err) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to delete book",
-        });
-      }
+  const handleDeleteBook = (id: string) => {
+    setBookToDelete(id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteBook = async () => {
+    if (!bookToDelete) return;
+    try {
+      await dispatch(deleteBook(bookToDelete)).unwrap(); // Call deleteBook action
+      toast({
+        title: "Success",
+        description: "Book deleted successfully",
+      });
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete book",
+      });
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setBookToDelete(null);
     }
   };
 
@@ -118,17 +139,17 @@ const Books = () => {
   return (
     <div className="space-y-6">
       {/* Header section */}
-      <div className="flex items-center justify-between">
+      <div className="mb-10 flex items-end justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Books</h1>
-          <p className="text-muted-foreground">
-            Manage your library's book inventory
+          <h1 className="text-5xl font-extrabold text-foreground tracking-tighter mb-2">Inventory <span className="text-primary italic">Catalog</span></h1>
+          <p className="text-lg text-muted-foreground/60">
+            Comprehensive management of the library's physical collection.
           </p>
         </div>
-        {/* Add Book Button */}
-        <Button onClick={handleAddBook}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Book
+        {/* Add Book Button with modern styling */}
+        <Button onClick={handleAddBook} className="rounded-2xl px-6 h-12 font-bold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all">
+          <Plus className="mr-2 h-5 w-5" />
+          Add New Book
         </Button>
       </div>
 
@@ -158,6 +179,25 @@ const Books = () => {
           />
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the book
+              from the library inventory.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteBook} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

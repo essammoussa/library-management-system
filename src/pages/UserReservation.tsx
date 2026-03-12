@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import UserReservationCard from '@/components/reservations/UserReservationCard';
-import { UserBookState } from '@/types/book';
+import { UserBookState, Book } from '@/types/book';
+import booksData from '@/data/books.json';
+import { useToast } from '@/hooks/use-toast';
 
 export default function MyReservations() {
+  const { toast } = useToast();
   // State to store user's borrowed and reserved books
   const [userBooks, setUserBooks] = useState<UserBookState>({ borrowed: [], reserved: [] });
+  const [allBooks, setAllBooks] = useState<Book[]>([]);
 
   // Load reserved books from localStorage on component mount
   useEffect(() => {
+    setAllBooks(booksData as Book[]);
     const reserved = JSON.parse(localStorage.getItem('reservedBooks') || '[]');
     setUserBooks(prev => ({ ...prev, reserved }));
   }, []);
@@ -20,27 +25,36 @@ export default function MyReservations() {
     localStorage.setItem('reservedBooks', JSON.stringify(updatedReserved));
     // Update state
     setUserBooks(prev => ({ ...prev, reserved: updatedReserved }));
-    alert('Reservation canceled!');
+    toast({ title: "Success", description: "Reservation canceled!" });
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-8 space-y-8 max-w-[1400px] mx-auto">
       {/* Page header */}
-      <h1 className="text-3xl font-bold">My Reservations</h1>
+      <div>
+        <h1 className="text-4xl font-extrabold tracking-tight text-foreground">Reservations</h1>
+        <p className="text-muted-foreground mt-1 font-medium">Manage your upcoming book requests</p>
+      </div>
 
       {/* If no reserved books, show message */}
       {userBooks.reserved.length === 0 ? (
-        <p>You have no reserved books.</p>
+        <div className="bg-card/40 backdrop-blur-md p-12 rounded-3xl border border-dashed border-border/60 text-center">
+          <p className="text-muted-foreground font-medium">You don't have any pending reservations.</p>
+        </div>
       ) : (
         // Display reserved books in a grid
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {userBooks.reserved.map(book => (
-            <UserReservationCard
-              key={book.bookId}
-              book={book}
-              onCancel={handleCancel} // Pass cancel handler to card
-            />
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
+          {userBooks.reserved.map(book => {
+            const bookInfo = allBooks.find(b => b.id === book.bookId);
+            return (
+              <UserReservationCard
+                key={book.bookId}
+                book={book}
+                imageUrl={bookInfo?.image}
+                onCancel={handleCancel} // Pass cancel handler to card
+              />
+            );
+          })}
         </div>
       )}
     </div>

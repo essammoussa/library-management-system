@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useRole } from './store/RoleContext';
+import { Toaster } from './components/ui/toaster';
 
 // Layouts
 import { AdminLayout } from './components/layout/AdminLayout';
@@ -40,50 +41,54 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 ------------------------------------------ */
 function App() {
   return (
-    <Routes>
-      {/* Public Route */}
-      <Route path="/login" element={<Login />} />
+    <>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/login" element={<Login />} />
+        
+        {/* Primary Landing: User Discovery (Public) */}
+        <Route element={<UserLayout />}>
+          <Route path="/" element={<UserCatalog />} />
+        </Route>
 
-      {/* Admin Routes */}
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <AdminLayout />
-          </ProtectedRoute>
-        }
-      >
-        {/* Default page for / */}
-        <Route index element={<Dashboard />} />
-        <Route path="books" element={<Books />} />
-        <Route path="members" element={<Members />} />
-        <Route path="borrowing" element={<Borrowing />} />
-        <Route path="reservations" element={<Reservations />} />
-        <Route path="fines" element={<FinesList />} />
-      </Route>
+        {/* Protected User Routes */}
+        <Route
+          path="/user"
+          element={
+            <ProtectedRoute>
+              <UserLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="catalog" element={<Navigate to="/" replace />} />
+          <Route path="borrowed" element={<UserBorrowed />} />
+          <Route path="reservations" element={<UserReservation />} />
+          <Route path="fines" element={<UserFines />} />
+          <Route path="profile" element={<UserProfile />} />
+        </Route>
 
-      {/* User Routes */}
-      <Route
-        path="/user"
-        element={
-          <ProtectedRoute>
-            {/* UserLayout wraps all user pages */}
-            <UserLayout>
-              <Outlet /> {/* Outlet is required to render nested routes */}
-            </UserLayout>
-          </ProtectedRoute>
-        }
-      >
-        <Route path="catalog" element={<UserCatalog />} />
-        <Route path="borrowed" element={<UserBorrowed />} />
-        <Route path="reservations" element={<UserReservation />} />
-        <Route path="fines" element={<UserFines />} />
-        <Route path="profile" element={<UserProfile />} />
-      </Route>
+        {/* Admin Routes (Relocated to /admin) */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="books" element={<Books />} />
+          <Route path="members" element={<Members />} />
+          <Route path="borrowing" element={<Borrowing />} />
+          <Route path="reservations" element={<Reservations />} />
+          <Route path="fines" element={<FinesList />} />
+        </Route>
 
-      {/* 404 - Catch all unmatched routes */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        {/* 404 - Catch all unmatched routes */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <Toaster />
+    </>
   );
 }
 

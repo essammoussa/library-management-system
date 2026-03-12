@@ -65,68 +65,74 @@ export function BookCard({
   const button = getButtonContent(); // current button config
 
   return (
-    <div className="bg-card border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow group">
+    <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl overflow-hidden hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-all duration-500 group flex flex-col h-full min-h-[450px]">
       {/* Book Cover / Icon */}
-      <div className="bg-gradient-to-br from-primary/10 to-secondary/10 h-48 flex items-center justify-center group-hover:from-primary/20 group-hover:to-secondary/20 transition-colors">
-        <BookIcon className="w-20 h-20 text-muted-foreground" />
+      <div className="relative h-48 w-full overflow-hidden">
+        {book.image ? (
+          <img
+            src={book.image}
+            alt={book.title}
+            className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700"
+          />
+        ) : (
+          <div className="bg-gradient-to-br from-primary/20 via-primary/5 to-secondary/20 h-full flex items-center justify-center">
+            <BookIcon className="w-20 h-20 text-primary/40" />
+          </div>
+        )}
+        {/* Quick Badge for availability */}
+        <div className="absolute top-3 right-3">
+          <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-md shadow-sm ${
+            book.status === 'available' ? 'bg-green-500/90 text-white' : 'bg-red-500/90 text-white'
+          }`}>
+            {book.status === 'available' ? 'Available' : 'Unavailable'}
+          </span>
+        </div>
       </div>
 
       {/* Book Info Section */}
-      <div className="p-5 space-y-3">
-        {/* Title */}
-        <div>
-          <h3 className="text-lg font-semibold text-card-foreground line-clamp-2 group-hover:text-primary transition-colors">
+      <div className="p-6 space-y-4 flex-1 flex flex-col">
+        <div className="space-y-1.5">
+          <h3 className="text-lg font-bold text-card-foreground line-clamp-2 leading-tight group-hover:text-primary transition-colors">
             {book.title}
           </h3>
+          <div className="flex items-center text-sm text-muted-foreground/80 font-medium">
+            <User className="w-3.5 h-3.5 mr-1.5 text-primary/60" />
+            <span className="line-clamp-1">{book.author}</span>
+          </div>
         </div>
 
-        {/* Author */}
-        <div className="flex items-center text-sm text-muted-foreground">
-          <User className="w-4 h-4 mr-2" />
-          <span className="line-clamp-1">{book.author}</span>
-        </div>
-
-        {/* Category */}
-        <div className="flex items-center text-sm text-muted-foreground">
-          <Tag className="w-4 h-4 mr-2" />
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-accent text-accent-foreground">
+        <div className="flex flex-wrap gap-2">
+          <span className="inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-bold bg-primary/5 text-primary uppercase tracking-tight">
+            <Tag className="w-3 h-3 mr-1.5" />
             {book.category}
           </span>
-        </div>
-
-        {/* Availability Status */}
-        <div className="flex items-center text-sm">
-          {book.status === 'available' ? (
-            <>
-              <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-              <span className="text-green-600 dark:text-green-400 font-medium">
-                Available ({book.availableQuantity})
-              </span>
-            </>
-          ) : (
-            <>
-              <XCircle className="w-4 h-4 mr-2 text-red-500" />
-              <span className="text-red-600 dark:text-red-400 font-medium">
-                Not Available
-              </span>
-            </>
+          {book.status === 'available' && (
+            <span className="inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-bold bg-green-500/5 text-green-600 uppercase tracking-tight">
+              {book.availableQuantity} Copies Left
+            </span>
           )}
         </div>
 
-        {/* Description (optional) */}
-        {book.description && (
-          <p className="text-sm text-muted-foreground line-clamp-2 pt-2 border-t border-border">
-            {book.description}
-          </p>
-        )}
+        {/* Description (optional) - always takes available space to push button down */}
+        <div className="flex-1">
+          {book.description && (
+            <p className="text-xs text-muted-foreground/70 line-clamp-3 leading-relaxed italic border-l-2 border-primary/10 pl-3">
+              "{book.description}"
+            </p>
+          )}
+        </div>
 
         {/* Action Button */}
         <button
           onClick={button.onClick}
           disabled={button.disabled}
-          className={`w-full flex items-center justify-center space-x-2 py-2.5 rounded-lg transition font-medium shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${button.className}`}
+          className={`w-full mt-auto flex items-center justify-center space-x-2 py-3 rounded-xl transition-all duration-300 font-bold text-xs uppercase tracking-widest shadow-lg active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed ${button.className}`}
         >
-          {button.icon}
+          {isLoading ? (
+            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          ) : (
+            button.icon
+          )}
           <span>{isLoading ? 'Processing...' : button.text}</span>
         </button>
       </div>

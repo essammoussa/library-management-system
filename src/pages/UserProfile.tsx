@@ -7,38 +7,59 @@ export default function UserProfile() {
   const { user } = useRole();
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 md:p-8 space-y-8 max-w-[1400px] mx-auto">
       {/* Page header */}
-      <h2 className="text-3xl font-bold text-foreground mb-6">My Profile</h2>
+      <div>
+        <h1 className="text-4xl font-extrabold tracking-tight text-foreground">Member Profile</h1>
+        <p className="text-muted-foreground mt-1 font-medium">Manage your personal information and account settings</p>
+      </div>
 
       {/* Profile card */}
-      <div className="bg-card border border-border rounded-lg p-8">
+      <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-3xl overflow-hidden shadow-xl p-8 md:p-12 relative">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
         
         {/* User avatar and basic info */}
-        <div className="flex items-center space-x-4 mb-6">
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-8 relative z-10">
           {/* Avatar icon */}
-          <div className="bg-secondary/10 p-4 rounded-full">
-            <User className="w-12 h-12 text-secondary" />
+          <div className="size-24 rounded-3xl bg-primary/10 flex items-center justify-center border border-primary/20 shadow-inner">
+            <User className="w-12 h-12 text-primary" />
           </div>
           {/* Name and email */}
-          <div>
-            <h3 className="text-xl font-semibold text-card-foreground">{user?.name}</h3>
-            <p className="text-muted-foreground">{user?.email}</p>
+          <div className="text-center md:text-left space-y-2">
+            <h3 className="text-3xl font-black text-card-foreground tracking-tight">{user?.name}</h3>
+            <p className="text-lg text-muted-foreground font-medium">{user?.email}</p>
+            <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-4">
+              <span className="px-4 py-1.5 rounded-full bg-primary text-white text-[10px] font-bold uppercase tracking-widest shadow-lg">
+                Active Member
+              </span>
+              <span className="px-4 py-1.5 rounded-full bg-primary/5 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/10">
+                Premium Access
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Additional user details */}
-        <div className="space-y-4">
-          {/* Member since */}
-          <div>
-            <label className="block text-sm font-medium text-muted-foreground mb-1">Member Since</label>
-            <p className="text-foreground">January 2024</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16 relative z-10">
+          {/* Additional user details */}
+          <div className="space-y-6">
+            <div className="p-6 bg-background/40 backdrop-blur-md rounded-2xl border border-border/50">
+              <label className="block text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Member Since</label>
+              <p className="text-lg font-bold text-foreground">January 2024</p>
+            </div>
+
+            <div className="p-6 bg-background/40 backdrop-blur-md rounded-2xl border border-border/50">
+              <label className="block text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Library ID</label>
+              <p className="text-lg font-bold text-foreground">M-2024-001</p>
+            </div>
           </div>
 
-          {/* Member ID */}
-          <div>
-            <label className="block text-sm font-medium text-muted-foreground mb-1">Member ID</label>
-            <p className="text-foreground">M-2024-001</p>
+          <div className="space-y-6 text-sm text-muted-foreground/80 font-medium leading-relaxed">
+            <p>
+              Thank you for being a valued member of our library community. Your account gives you access to a world of knowledge, including thousands of physical books, digital resources, and exclusive member events.
+            </p>
+            <p>
+              If you need to update your contact information or change your library preferences, please visit the help desk or contact our support team.
+            </p>
           </div>
         </div>
       </div>

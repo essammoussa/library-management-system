@@ -115,18 +115,16 @@ const Reservations = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
+      {/* Header section */}
+      <div className="mb-10 flex items-end justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Reservations</h1>
-          <p className="text-muted-foreground">
-            Manage book reservations and queue system
+          <h1 className="text-5xl font-extrabold text-foreground tracking-tighter mb-2">Service <span className="text-primary italic">Requests</span></h1>
+          <p className="text-lg text-muted-foreground/60">
+            Track and manage pending book reservations.
           </p>
         </div>
-
-        {/* Button to open reservation form */}
-        <Button onClick={() => setIsFormOpen(true)}>
-          <Plus className="h-4 w-4 mr-2" />
+        <Button onClick={() => setIsFormOpen(true)} className="rounded-2xl px-6 h-12 font-bold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all">
+          <Plus className="mr-2 h-5 w-5" />
           New Reservation
         </Button>
       </div>

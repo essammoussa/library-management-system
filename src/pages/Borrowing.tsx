@@ -8,6 +8,7 @@ import {
 } from "@/store/slices/borrowSlice";
 import { fetchBooks } from "@/store/slices/booksSlice";
 import { fetchMembers } from "@/store/slices/membersSlice";
+import { FineCalculator } from "@/lib/fineCalculator";
 import { BorrowRecord } from "@/data/borrowing";
 import { BorrowList } from "@/components/borrowing/BorrowList";
 import { BorrowForm } from "@/components/borrowing/BorrowForm";
@@ -90,17 +91,13 @@ const Borrowing = () => {
     );
 
     // Calculate late fee if returned after due date
-    const dueDate = new Date(selectedRecord.dueDate);
-    const actualReturnDate = new Date(returnDate);
-    const daysLate = Math.floor(
-      (actualReturnDate.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    const lateFee = daysLate > 0 ? daysLate * 0.5 : 0;
+    const fineStats = FineCalculator.calculateFine(selectedRecord.dueDate);
+    const lateFee = fineStats.fineAmount;
 
     toast({
       title: "Success",
       description: lateFee > 0
-        ? `Book returned with a late fee of $${lateFee.toFixed(2)}`
+        ? `Book returned with a late fee of ${FineCalculator.formatCurrency(lateFee)}`
         : "Book returned successfully",
     });
 
@@ -122,15 +119,15 @@ const Borrowing = () => {
   return (
     <div className="space-y-6">
       {/* Header section */}
-      <div className="flex items-center justify-between">
+      <div className="mb-10 flex items-end justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Borrowing</h1>
-          <p className="text-muted-foreground">Track book loans and returns</p>
+          <h1 className="text-5xl font-extrabold text-foreground tracking-tighter mb-2">Loan <span className="text-primary italic">Tracking</span></h1>
+          <p className="text-lg text-muted-foreground/60">Monitor book loans and manage circulation status.</p>
         </div>
         {/* Button to open borrow form */}
-        <Button onClick={handleAddBorrow}>
-          <Plus className="mr-2 h-4 w-4" />
-          New Borrow
+        <Button onClick={handleAddBorrow} className="rounded-2xl px-6 h-12 font-bold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all">
+          <Plus className="mr-2 h-5 w-5" />
+          New Borrow Record
         </Button>
       </div>
 

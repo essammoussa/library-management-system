@@ -1,0 +1,64 @@
+{
+  "stats": {
+    "totalBooks": { "value": 1247, "trend": { "value": 12, "isPositive": true } },
+    "totalMembers": { "value": 342, "trend": { "value": 8, "isPositive": true } },
+    "borrowedToday": { "value": 23, "trend": { "value": 5, "isPositive": false } },
+    "overdueBooks": { "value": 18, "trend": { "value": 3, "isPositive": false } },
+    "pendingReservations": { "value": 12, "trend": { "value": 15, "isPositive": true } }
+  },
+  "mostBorrowedBooks": [
+    { "id": "1", "title": "The Great Gatsby", "author": "F. Scott Fitzgerald", "borrowCount": 45 },
+    { "id": "2", "title": "To Kill a Mockingbird", "author": "Harper Lee", "borrowCount": 42 },
+    { "id": "3", "title": "1984", "author": "George Orwell", "borrowCount": 38 },
+    { "id": "4", "title": "Pride and Prejudice", "author": "Jane Austen", "borrowCount": 35 },
+    { "id": "5", "title": "The Catcher in the Rye", "author": "J.D. Salinger", "borrowCount": 31 }
+  ],
+  "recentActivities": [
+    {
+      "type": "borrow",
+      "title": "Book Borrowed",
+      "description": "John Doe borrowed 'The Great Gatsby'",
+      "timestamp": "5 minutes ago"
+    },
+    {
+      "type": "return",
+      "title": "Book Returned",
+      "description": "Jane Smith returned 'To Kill a Mockingbird'",
+      "timestamp": "15 minutes ago"
+    },
+    {
+      "type": "reservation",
+      "title": "New Reservation",
+      "description": "Mike Johnson reserved '1984'",
+      "timestamp": "1 hour ago"
+    },
+    {
+      "type": "member",
+      "title": "New Member",
+      "description": "Sarah Williams joined the library",
+      "timestamp": "2 hours ago"
+    },
+    {
+      "type": "borrow",
+      "title": "Book Borrowed",
+      "description": "Emma Davis borrowed 'Pride and Prejudice'",
+      "timestamp": "3 hours ago"
+    }
+  ],
+  "borrowingTrends": [
+    { "month": "Jan", "borrows": 120, "returns": 115 },
+    { "month": "Feb", "borrows": 145, "returns": 140 },
+    { "month": "Mar", "borrows": 165, "returns": 158 },
+    { "month": "Apr", "borrows": 140, "returns": 145 },
+    { "month": "May", "borrows": 180, "returns": 172 },
+    { "month": "Jun", "borrows": 195, "returns": 188 }
+  ],
+  "topCategories": [
+    { "category": "Fiction", "count": 245 },
+    { "category": "Science", "count": 198 },
+    { "category": "History", "count": 156 },
+    { "category": "Biography", "count": 142 },
+    { "category": "Technology", "count": 128 },
+    { "category": "Arts", "count": 95 }
+  ]
+}

@@ -3,8 +3,8 @@ import { Fine, FineStatus } from '@/types/Fine';
 // Configuration (can be moved to env or config file)
 export const FINE_CONFIG = {
   DAILY_RATE: 1.0, // $1 per day
-  MAX_FINE: 50.0, // Maximum fine cap
-  GRACE_PERIOD_DAYS: 0, // No grace period
+  MAX_FINE: 100.0, // Increased cap
+  GRACE_PERIOD_DAYS: 0,
 };
 
 export class FineCalculator {

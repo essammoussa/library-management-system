@@ -17,10 +17,15 @@ export default function UserLayout({ children }: Props) {
         <MemberSidebar />
 
         {/* Main content area */}
-        <main className="flex-1">
-          {/* Top bar with sidebar trigger */}
+        <main className="flex-1 relative">
+          {/* Top bar with sidebar trigger (scrolled) */}
           <div className="border-b border-border p-4 bg-card">
             <SidebarTrigger /> {/* Toggles sidebar collapse */}
+          </div>
+
+          {/* Floating Toggle for Mobile (Fixed while scrolling) */}
+          <div className="fixed bottom-6 left-6 z-50 md:hidden">
+            <SidebarTrigger className="h-12 w-12 rounded-full bg-primary text-white shadow-2xl hover:bg-primary/90 transition-all duration-300 ring-4 ring-background" />
           </div>
 
           {/* Page content */}

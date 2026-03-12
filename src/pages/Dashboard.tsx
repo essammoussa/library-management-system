@@ -9,63 +9,17 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { useEffect } from "react";
 
-// --- Dummy data for dashboard statistics ---
-const stats = {
-  totalBooks: { value: 1247, trend: { value: 12, isPositive: true } },
-  totalMembers: { value: 342, trend: { value: 8, isPositive: true } },
-  borrowedToday: { value: 23, trend: { value: 5, isPositive: false } },
-  overdueBooks: { value: 18, trend: { value: 3, isPositive: false } },
-  pendingReservations: { value: 12, trend: { value: 15, isPositive: true } },
-  
+import dashboardData from "@/data/dashboard.json";
+
+// Map activity types to icons
+const activityIcons = {
+  borrow: BookCheck,
+  return: BookCheck,
+  reservation: Clock,
+  member: Users,
 };
 
-// --- Dummy data for most borrowed books ---
-const mostBorrowedBooks = [
-  { id: "1", title: "The Great Gatsby", author: "F. Scott Fitzgerald", borrowCount: 45 },
-  { id: "2", title: "To Kill a Mockingbird", author: "Harper Lee", borrowCount: 42 },
-  { id: "3", title: "1984", author: "George Orwell", borrowCount: 38 },
-  { id: "4", title: "Pride and Prejudice", author: "Jane Austen", borrowCount: 35 },
-  { id: "5", title: "The Catcher in the Rye", author: "J.D. Salinger", borrowCount: 31 },
-];
-
-// --- Dummy data for recent activities timeline ---
-const recentActivities = [
-  {
-    icon: BookCheck,
-    type: "borrow" as const,
-    title: "Book Borrowed",
-    description: "John Doe borrowed 'The Great Gatsby'",
-    timestamp: "5 minutes ago",
-  },
-  {
-    icon: BookCheck,
-    type: "return" as const,
-    title: "Book Returned",
-    description: "Jane Smith returned 'To Kill a Mockingbird'",
-    timestamp: "15 minutes ago",
-  },
-  {
-    icon: Clock,
-    type: "reservation" as const,
-    title: "New Reservation",
-    description: "Mike Johnson reserved '1984'",
-    timestamp: "1 hour ago",
-  },
-  {
-    icon: Users,
-    type: "member" as const,
-    title: "New Member",
-    description: "Sarah Williams joined the library",
-    timestamp: "2 hours ago",
-  },
-  {
-    icon: BookCheck,
-    type: "borrow" as const,
-    title: "Book Borrowed",
-    description: "Emma Davis borrowed 'Pride and Prejudice'",
-    timestamp: "3 hours ago",
-  },
-];
+const { stats, mostBorrowedBooks, recentActivities } = dashboardData;
 
 const Dashboard = () => {
     
@@ -91,10 +45,10 @@ const Dashboard = () => {
     
     <div className="space-y-6">
       {/* Header Section */}
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-muted-foreground mt-2">
-          Welcome to the library management system
+      <div className="mb-10">
+        <h1 className="text-5xl font-extrabold text-foreground tracking-tighter mb-2">System <span className="text-primary italic">Overview</span></h1>
+        <p className="text-lg text-muted-foreground/60">
+          Management insights and library performance at a glance.
         </p>
       </div> 
       
@@ -154,17 +108,17 @@ const Dashboard = () => {
 
         {/* Most Borrowed Books Card (spans 3 columns) */}
         <div className="lg:col-span-3">
-          <Card>
-            <CardHeader>
-              <CardTitle>Most Borrowed Books</CardTitle>
+          <Card className="border border-border/50 shadow-xl bg-card/40 backdrop-blur-xl rounded-3xl overflow-hidden">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl font-bold tracking-tight text-foreground/80">Most Borrowed</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {mostBorrowedBooks.map((book, index) => (
                   <div key={book.id} className="flex items-center gap-4">
                     {/* Ranking circle */}
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold text-sm">
-                      {index + 1}
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary font-bold text-sm shadow-sm ring-1 ring-primary/20">
+                      #{index + 1}
                     </div>
                     {/* Book title and author */}
                     <div className="flex-1 space-y-1">
@@ -172,7 +126,7 @@ const Dashboard = () => {
                       <p className="text-xs text-muted-foreground">{book.author}</p>
                     </div>
                     {/* Borrow count */}
-                    <Badge variant="secondary">{book.borrowCount}</Badge>
+                    <Badge variant="secondary" className="bg-primary/5 text-primary border-none font-bold rounded-lg px-2.5 py-0.5">{book.borrowCount}</Badge>
                   </div>
                 ))}
               </div>
@@ -195,9 +149,9 @@ const Dashboard = () => {
 
         {/* Recent Activity Timeline (spans 3 columns) */}
         <div className="lg:col-span-3">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
+          <Card className="border border-border/50 shadow-xl bg-card/40 backdrop-blur-xl rounded-3xl overflow-hidden">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl font-bold tracking-tight text-foreground/80">Pulse Feed</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
@@ -205,8 +159,8 @@ const Dashboard = () => {
                 {recentActivities.map((activity, index) => (
                   <ActivityItem
                     key={index}
-                    icon={activity.icon}
-                    type={activity.type}
+                    icon={activityIcons[activity.type as keyof typeof activityIcons]}
+                    type={activity.type as "borrow" | "return" | "reservation" | "member"}
                     title={activity.title}
                     description={activity.description}
                     timestamp={activity.timestamp}

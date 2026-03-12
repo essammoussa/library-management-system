@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRole } from '@/store/RoleContext';
 import { BookOpen } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useLocation } from 'react-router-dom';
 
 type Role = 'admin' | 'member';
 
@@ -16,12 +18,22 @@ const ADMIN_EMAIL = "superadmin@library.com";
 export default function Login() {
   const { login } = useRole();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { toast } = useToast();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRegister, setIsRegister] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Auto-switch to register if mode=register is in URL
+  React.useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('mode') === 'register') {
+      setIsRegister(true);
+    }
+  }, [location]);
 
   //  Get all users
   const getUsers = (): User[] => {
@@ -63,7 +75,7 @@ export default function Login() {
 
     saveUser({ email, password, role });
 
-    alert('✅ Registration successful! You can now login.');
+    toast({ title: "Success", description: "✅ Registration successful! You can now login." });
     setIsRegister(false);
     setEmail('');
     setPassword('');

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BorrowedBook } from '@/types/book';
+import { FineCalculator } from '@/lib/fineCalculator';
+import { CreditCard, AlertCircle } from 'lucide-react';
 
 export default function MyFines() {
   const [borrowedBooks, setBorrowedBooks] = useState<BorrowedBook[]>([]);
@@ -9,43 +11,69 @@ export default function MyFines() {
     const borrowed: BorrowedBook[] = JSON.parse(localStorage.getItem('borrowedBooks') || '[]');
     setBorrowedBooks(borrowed);
 
-    const DAILY_RATE = 1; // $1 per day
     const fines = borrowed.reduce((acc, b) => {
-      const today = new Date();
-      const due = new Date(b.dueDate);
-      const overdueDays = Math.max(Math.floor((today.getTime() - due.getTime()) / (1000 * 60 * 60 * 24)), 0);
-      return acc + overdueDays * DAILY_RATE;
+      const { fineAmount } = FineCalculator.calculateFine(b.dueDate);
+      return acc + fineAmount;
     }, 0);
 
-    setTotalFines(Number(fines.toFixed(2)));
+    setTotalFines(fines);
   }, []);
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold">My Fines</h1>
+    <div className="p-4 md:p-8 space-y-8 max-w-[1400px] mx-auto">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-4xl font-extrabold tracking-tight text-foreground">Fines & Penalties</h1>
+          <p className="text-muted-foreground mt-1 font-medium">Manage your outstanding balances</p>
+        </div>
+        
+        <div className="bg-primary/5 border border-primary/20 p-6 rounded-3xl flex items-center gap-6">
+          <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+            <CreditCard className="size-6 text-primary" />
+          </div>
+          <div>
+            <p className="text-[10px] font-bold text-primary/60 uppercase tracking-widest">Total Outstanding</p>
+            <p className="text-3xl font-black text-primary">{FineCalculator.formatCurrency(totalFines)}</p>
+          </div>
+        </div>
+      </div>
 
       {borrowedBooks.length === 0 ? (
-        <p>No borrowed books.</p>
+        <div className="bg-card/40 backdrop-blur-md p-12 rounded-3xl border border-dashed border-border/60 text-center">
+          <p className="text-muted-foreground font-medium">No active loans found.</p>
+        </div>
       ) : (
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {borrowedBooks.map((book) => {
-            const today = new Date();
-            const due = new Date(book.dueDate);
-            const overdueDays = Math.max(Math.floor((today.getTime() - due.getTime()) / (1000 * 60 * 60 * 24)), 0);
-            const fine = (overdueDays * 1).toFixed(2);
+            const { daysOverdue, fineAmount } = FineCalculator.calculateFine(book.dueDate);
 
-            return overdueDays > 0 ? (
-              <div key={book.bookId} className="border p-4 rounded bg-card">
-                <p>
-                  {book.bookTitle} - Overdue {overdueDays} days - Fine ${fine}
-                </p>
+            return daysOverdue > 0 ? (
+              <div key={book.bookId} className="bg-card/80 backdrop-blur-sm border border-red-500/10 rounded-2xl p-6 hover:shadow-xl transition-all duration-300">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="size-10 rounded-xl bg-red-100 flex items-center justify-center text-red-600">
+                    <AlertCircle className="size-5" />
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-red-100 text-red-600 text-[10px] font-bold uppercase tracking-wider">
+                    Overdue
+                  </span>
+                </div>
+                
+                <h3 className="text-lg font-bold mb-1">{book.bookTitle}</h3>
+                <div className="space-y-3 mt-4">
+                  <div className="flex items-center justify-between text-sm py-2 border-b border-border/50">
+                    <span className="text-muted-foreground font-medium">Overdue Days</span>
+                    <span className="font-bold text-red-600">{daysOverdue}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm py-2">
+                    <span className="text-muted-foreground font-medium">Calculated Fine</span>
+                    <span className="font-bold text-xl">{FineCalculator.formatCurrency(fineAmount)}</span>
+                  </div>
+                </div>
               </div>
             ) : null;
           })}
         </div>
       )}
-
-      <p className="mt-4 font-bold">Total Fines: ${totalFines.toFixed(2)}</p>
     </div>
   );
 }

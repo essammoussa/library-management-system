@@ -10,6 +10,7 @@ export interface Book {
   status: "available" | "borrowed" | "reserved";
   availableQuantity: number;
   coverImage?: string;
+  image?: string;
   description?: string;
 }
 

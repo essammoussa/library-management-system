@@ -1,14 +1,8 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
-// Dummy data - replace with real data from backend
-const categoryData = [
-  { category: "Fiction", count: 245 },
-  { category: "Science", count: 198 },
-  { category: "History", count: 156 },
-  { category: "Biography", count: 142 },
-  { category: "Technology", count: 128 },
-  { category: "Arts", count: 95 },
-];
+import dashboardData from "@/data/dashboard.json";
+
+const { topCategories: categoryData } = dashboardData;
 
 export function TopCategoriesChart() {
   return (
