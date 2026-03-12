@@ -44,6 +44,7 @@ export function MemberSidebar() {
   const { logout } = useRole(); // Logout function from role context
   const navigate = useNavigate(); // Router navigation
   const isCollapsed = state === "collapsed"; // Check if sidebar is collapsed
+  const { isAuthenticated } = useRole();
 
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
 

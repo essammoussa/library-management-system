@@ -2,8 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { BorrowedBook } from '@/types/book';
 import { FineCalculator } from '@/lib/fineCalculator';
 import { CreditCard, AlertCircle } from 'lucide-react';
+import { useRole } from "@/store/RoleContext";
+import { useNavigate } from "react-router-dom";
+import { Button } from '@/components/ui/button';
 
 export default function MyFines() {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useRole();
   const [borrowedBooks, setBorrowedBooks] = useState<BorrowedBook[]>([]);
   const [totalFines, setTotalFines] = useState(0);
 
@@ -18,6 +23,21 @@ export default function MyFines() {
 
     setTotalFines(fines);
   }, []);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="p-4 md:p-8 space-y-8 max-w-[1400px] mx-auto min-h-[80vh] flex flex-col items-center justify-center text-center">
+        <div className="bg-card/40 backdrop-blur-md p-12 rounded-3xl border border-dashed border-border/60 max-w-lg w-full">
+          <CreditCard className="w-16 h-16 text-primary/50 mx-auto mb-6" />
+          <h2 className="text-2xl font-bold mb-3">Manage Your Account</h2>
+          <p className="text-muted-foreground mb-8">Register now to manage your account details and view any outstanding balances.</p>
+          <Button size="lg" className="w-full font-bold uppercase tracking-widest" onClick={() => navigate('/login?mode=register')}>
+            Register Now
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 md:p-8 space-y-8 max-w-[1400px] mx-auto">

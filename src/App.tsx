@@ -51,13 +51,11 @@ function App() {
           <Route path="/" element={<UserCatalog />} />
         </Route>
 
-        {/* Protected User Routes */}
+        {/* User Routes */}
         <Route
           path="/user"
           element={
-            <ProtectedRoute>
-              <UserLayout />
-            </ProtectedRoute>
+            <UserLayout />
           }
         >
           <Route path="catalog" element={<Navigate to="/" replace />} />

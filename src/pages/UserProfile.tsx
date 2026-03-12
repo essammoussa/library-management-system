@@ -1,10 +1,28 @@
 import React from 'react';
 import { useRole } from '@/store/RoleContext';
 import { User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 export default function UserProfile() {
   // Get the currently logged-in user from the role context
-  const { user } = useRole();
+  const { user, isAuthenticated } = useRole();
+  const navigate = useNavigate();
+
+  if (!isAuthenticated) {
+    return (
+      <div className="p-4 md:p-8 space-y-8 max-w-[1400px] mx-auto min-h-[80vh] flex flex-col items-center justify-center text-center">
+        <div className="bg-card/40 backdrop-blur-md p-12 rounded-3xl border border-dashed border-border/60 max-w-lg w-full">
+          <User className="w-16 h-16 text-primary/50 mx-auto mb-6" />
+          <h2 className="text-2xl font-bold mb-3">Join the Library</h2>
+          <p className="text-muted-foreground mb-8">Register now to manage your profile, track your reading history, and access all library features.</p>
+          <Button size="lg" className="w-full font-bold uppercase tracking-widest" onClick={() => navigate('/login?mode=register')}>
+            Register Now
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 md:p-8 space-y-8 max-w-[1400px] mx-auto">
