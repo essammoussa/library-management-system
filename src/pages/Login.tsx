@@ -93,9 +93,18 @@ export default function Login() {
     setError('');
 
     const users = getUsers();
-    const user = users.find(
+    let user = users.find(
       u => u.email === email && u.password === password
     );
+
+    // Fallback for default admin
+    if (!user && email === ADMIN_EMAIL && password === "admin123") {
+      user = {
+        email: ADMIN_EMAIL,
+        password: "admin123",
+        role: "admin"
+      };
+    }
 
     setTimeout(() => {
       if (!user) {
@@ -111,7 +120,7 @@ export default function Login() {
       });
 
       setLoading(false);
-      navigate(user.role === 'admin' ? '/' : '/user/catalog');
+      navigate(user.role === 'admin' ? '/admin' : '/user/catalog');
     }, 500);
   };
 

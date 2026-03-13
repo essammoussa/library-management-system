@@ -36,6 +36,28 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 /* -----------------------------------------
+   AuthRedirect Component
+   Redirects user if they have a specific role
+------------------------------------------ */
+function AuthRedirect({ 
+  role: targetRole, 
+  to, 
+  children 
+}: { 
+  role: 'admin' | 'member'; 
+  to: string; 
+  children: React.ReactNode 
+}) {
+  const { role, isAuthenticated } = useRole();
+  
+  if (isAuthenticated && role === targetRole) {
+    return <Navigate to={to} replace />;
+  }
+  
+  return <>{children}</>;
+}
+
+/* -----------------------------------------
    App Component
    Defines all routes of the app
 ------------------------------------------ */
@@ -48,7 +70,14 @@ function App() {
         
         {/* Primary Landing: User Discovery (Public) */}
         <Route element={<UserLayout />}>
-          <Route path="/" element={<UserCatalog />} />
+          <Route 
+            path="/" 
+            element={
+              <AuthRedirect role="admin" to="/admin">
+                <UserCatalog />
+              </AuthRedirect>
+            } 
+          />
         </Route>
 
         {/* User Routes */}

@@ -18,10 +18,7 @@ export default function UserLayout({ children }: Props) {
         <MemberSidebar />
 
 
-        {/* Floating Toggle for Mobile */}
-        <div className="fixed bottom-6 left-6 z-50 md:hidden">
-          <SidebarTrigger className="h-12 w-12 rounded-full bg-primary text-white shadow-2xl hover:bg-primary/90 transition-all duration-300 ring-4 ring-background" />
-        </div>
+
 
         {/* Main content area — no padding wrapping */}
         <main className="flex-1 relative">
