@@ -40,10 +40,10 @@ const memberMenuItems = [
 ];
 
 export function MemberSidebar() {
-  const { state } = useSidebar(); // Sidebar state: collapsed or expanded
+  const { state, isMobile } = useSidebar(); // Sidebar state: collapsed or expanded
   const { logout } = useRole(); // Logout function from role context
   const navigate = useNavigate(); // Router navigation
-  const isCollapsed = state === "collapsed"; // Check if sidebar is collapsed
+  const isCollapsed = state === "collapsed" && !isMobile; // Only collapse labels on desktop
   const { isAuthenticated } = useRole();
 
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
@@ -61,15 +61,15 @@ export function MemberSidebar() {
 
   return (
     // Main Sidebar wrapper
-    <Sidebar collapsible="icon" className="border-r border-border/50 bg-background/50 backdrop-blur-xl">
-      <SidebarHeader className="flex flex-row items-center justify-between px-4 py-4 border-b border-white/5 sticky top-0 z-10 bg-inherit backdrop-blur-md">
+    <Sidebar collapsible="icon" className="bg-sidebar/90 backdrop-blur-xl border-none">
+      <SidebarHeader className="flex flex-row items-center justify-between px-4 py-4 sticky top-0 z-10 bg-inherit backdrop-blur-md">
         {!isCollapsed && (
           <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/50">
             Member Panel
           </span>
         )}
         <SidebarTrigger className={cn(
-          "h-8 w-8 rounded-xl bg-white/5 hover:bg-white/10 text-white transition-all duration-300 md:hidden",
+          "h-8 w-8 rounded-xl bg-white/5 hover:bg-white/10 text-white transition-all duration-300",
           isCollapsed ? "mx-auto" : ""
         )}>
           {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
