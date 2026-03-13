@@ -38,8 +38,9 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
         {/* Main content area */}
         <main className="flex-1 relative">
-          <div className="border-b border-border p-4 bg-card">
-            {/* Top Bar Content (can add breadcrumbs here later) */}
+          <div className="sticky top-0 z-50 border-b border-border p-4 bg-card/80 backdrop-blur-md md:hidden flex items-center">
+            <SidebarTrigger />
+            <span className="ml-4 font-bold text-sm uppercase tracking-wider text-foreground">Admin Panel</span>
           </div>
 
 

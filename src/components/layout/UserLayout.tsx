@@ -13,12 +13,17 @@ export default function UserLayout({ children }: Props) {
   return (
     // Provide sidebar context to all nested components
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
+      <div className="flex flex-col md:flex-row min-h-screen w-full bg-background">
         {/* Sidebar */}
         <MemberSidebar />
 
 
 
+
+        <div className="sticky top-0 z-50 md:hidden border-b border-border p-4 bg-card/80 backdrop-blur-md flex items-center">
+          <SidebarTrigger />
+          <span className="ml-4 font-bold text-sm tracking-tight text-foreground lowercase">library</span>
+        </div>
 
         {/* Main content area — no padding wrapping */}
         <main className="flex-1 relative">
