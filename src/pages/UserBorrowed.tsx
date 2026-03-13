@@ -98,7 +98,10 @@ const BorrowedBooks = () => {
                 {/* Book image */}
                 <div className="relative h-48 w-full overflow-hidden">
                   <img
-                    src={bookInfo.image || "/placeholder.jpg"}
+                    src={bookInfo.image 
+                      ? `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${bookInfo.image.replace(/^\//, '')}`
+                      : `${import.meta.env.BASE_URL.replace(/\/$/, '')}/placeholder.jpg`
+                    }
                     alt={bookInfo.title}
                     className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />

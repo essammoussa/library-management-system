@@ -70,7 +70,7 @@ export function BookCard({
       <div className="relative h-48 w-full overflow-hidden">
         {book.image ? (
           <img
-            src={book.image}
+            src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${book.image.replace(/^\//, '')}`}
             alt={book.title}
             className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700"
           />
