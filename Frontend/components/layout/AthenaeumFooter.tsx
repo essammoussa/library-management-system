@@ -20,10 +20,7 @@ export const AthenaeumFooter: React.FC = () => {
             <p className="font-serif-body text-xs italic text-[#c5bcad] leading-relaxed">
               Chartered for universal scholarly access, systematic folio conservation, and historical manuscript discovery.
             </p>
-            <div className="flex items-center gap-2 text-[11px] font-sans-ui text-gilded-gold">
-              <span className="w-2 h-2 rounded-full bg-status-available animate-pulse" />
-              Climate Vault Systems Active • 19.5°C
-            </div>
+            
           </div>
 
           {/* Col 2: Hours */}

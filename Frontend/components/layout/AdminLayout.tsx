@@ -37,7 +37,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         <AthenaeumHeader className="lg:left-64" />
 
         {/* Dynamic Page Content */}
-        <main className="flex-1 pt-20 px-4 sm:px-6 lg:px-8 py-8 min-w-0">
+        <main className="flex-1 pt-24 pb-8 px-4 sm:px-6 lg:px-8 min-w-0">
           {children || <Outlet />}
         </main>
 
