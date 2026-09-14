@@ -154,11 +154,17 @@ export const UserCatalog: React.FC = () => {
 
     try {
       const today = new Date();
+      const expiry = new Date(today);
+      expiry.setDate(expiry.getDate() + 14);
+
       await reservationApi.create({
         bookId: book.id,
+        bookTitle: book.title,
         memberId: user?.id || 'patron-user',
         memberName: user?.name || 'Patron Scholar',
+        memberEmail: user?.email || '',
         reservationDate: today.toISOString().split('T')[0],
+        expiryDate: expiry.toISOString().split('T')[0],
         status: 'active',
       });
 

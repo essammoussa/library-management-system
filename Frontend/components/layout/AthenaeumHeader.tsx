@@ -86,12 +86,6 @@ export const AthenaeumHeader: React.FC<AthenaeumHeaderProps> = ({
               <span className="xl:hidden">Manuscripts</span>
             </Link>
 
-            <a 
-              href="/#exhibitions-section" 
-              className="px-2.5 xl:px-3.5 py-2 text-ink-muted hover:text-archival-teal font-sans-ui text-xs xl:text-sm font-medium hover:bg-parchment-subtle rounded-md transition-colors shrink-0 whitespace-nowrap"
-            >
-              Curator Picks
-            </a>
 
             <Link 
               to="/user/borrowed" 
@@ -302,13 +296,6 @@ export const AthenaeumHeader: React.FC<AthenaeumHeaderProps> = ({
             >
               Rare Manuscripts &amp; Stacks
             </Link>
-            <a 
-              href="/#exhibitions-section"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded text-ink-muted font-sans-ui text-sm hover:bg-parchment-subtle"
-            >
-              Curator Picks
-            </a>
             <Link 
               to="/user/borrowed" 
               onClick={() => setMobileMenuOpen(false)}

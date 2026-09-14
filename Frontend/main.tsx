@@ -26,7 +26,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <RoleProvider>{/* RoleProvider: manages user authentication and roles */}
 
         {/* BrowserRouter: enables React Router routing */}
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
            {/* Main App component */}
            <App />
           

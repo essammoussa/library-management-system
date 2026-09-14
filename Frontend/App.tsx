@@ -15,7 +15,7 @@ import Books from './pages/Books';
 import Members from './pages/Members';
 import Borrowing from './pages/Borrowing';
 import Reservations from './pages/Reservations';
-import FinesList from '@/pages/FinesList';
+import FinesList from './pages/FinesList';
 import NotFound from './pages/NotFound';
 
 // User Pages
